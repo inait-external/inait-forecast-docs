@@ -3,7 +3,7 @@
 # Inait Predict Examples - Development Environment Setup
 # This script sets up the UV environment for running the Jupyter notebooks
 
-echo "🚀 Setting up Inait Predict Examples environment..."
+echo "🚀 Setting up inait Predict Examples environment..."
 
 # Check if uv is installed
 if ! command -v uv &> /dev/null; then

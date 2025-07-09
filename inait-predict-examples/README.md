@@ -5,6 +5,7 @@
 ### Prerequisites
 - [UV](https://docs.astral.sh/uv/) - Modern Python package manager
 - Python 3.8+ (automatically handled by UV)
+- Your URL and API key for inait Forecasting
 
 ### Getting Started
 1. **Clone and navigate to the directory:**
@@ -25,7 +26,7 @@
 4. **Open the example notebooks:**
    Navigate to the `notebook-examples/` folder and choose from:
    - `basic_functionality.ipynb` - Complete API overview and synchronous predictions
-   - `background_prediction.ipynb` - Asynchronous processing for large datasets
+   - `background_ensemble_prediction.ipynb` or `prediction_intervals_visualization.ipynb` - Asynchronous processing for large datasets
 
 ### Alternative Setup (Manual)
 ```bash
@@ -43,13 +44,13 @@ uv run jupyter notebook notebook-examples/basic_functionality.ipynb
 
 ## Transform Your Data Into Actionable Predictions
 
-Inait Forecasting is a powerful, user-friendly time series forecasting platform that democratizes advanced machine learning for businesses of all sizes. Whether you're predicting sales, demand, prices, or any time-dependent metrics, Inait Forecasting delivers accurate forecasts without requiring deep ML expertise.
+Inait Forecasting is a powerful, user-friendly time series forecasting platform that democratizes advanced machine learning for businesses of all sizes. Whether you're predicting sales, demand, prices, or any time-dependent metrics, inait Forecasting delivers accurate forecasts without requiring deep ML expertise.
 
-## 🎯 Why Choose Inait Forecasting?
+## 🎯 Why Choose inait Forecasting?
 
 ### **Effortless Accuracy**
 - **5 Intelligent Models**: Choose from `basic`, `robust`, `neural`, `gradient_boost`, or `fast_boost` - each optimized for different data characteristics
-- **Automatic Model Selection**: Let Inait Forecasting pick the best approach for your data
+- **Automatic Model Selection**: Let inait Forecasting pick the best approach for your data
 - **Ensemble Power**: Combine multiple intelligent models above for maximum accuracy and reliability
 - **Prediction Intervals**: Get confidence bounds, not just point estimates
 
@@ -87,4 +88,4 @@ Inait Forecasting is a powerful, user-friendly time series forecasting platform 
 
 ---
 
-*Inait Forecasting: Where advanced machine learning meets practical business solutions.*
+*inait Forecasting: Where advanced machine learning meets practical business solutions.*
