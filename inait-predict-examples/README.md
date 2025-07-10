@@ -42,6 +42,57 @@ uv run jupyter notebook notebook-examples/basic_functionality.ipynb
 
 ---
 
+## 📊 Dataset Format Requirements
+
+To ensure optimal performance with Inait Forecasting, your dataset must follow these formatting conventions:
+
+### **📁 File Format**
+- **Supported Format**: CSV (Comma-Separated Values)
+- **Encoding**: UTF-8 recommended
+- **Headers**: First row must contain column names
+
+### **⏰ Time Series Structure**
+- **Row Organization**: Each row represents a single timestamp observation
+- **Temporal Ordering**: Rows must be sorted in **chronological order** (ascending timestamps)
+- **Time Index**: Include a datetime column with consistent frequency
+- **No Gaps**: Ensure regular time intervals (hourly, daily, etc.) without missing timestamps
+
+### **📋 Required Columns**
+
+#### **🎯 Target Column**
+- **Purpose**: The variable you want to forecast
+- **Name**: Can be any descriptive name (e.g., `"sales"`, `"price"`, `"demand"`)
+- **Format**: Numeric values (integers or floats)
+- **Example**: `"DE_Spot_EPEX_1H_A"` (electricity spot prices)
+
+#### **📅 Time Index Column**
+- **Purpose**: Timestamp for each observation
+- **Format**: ISO datetime format recommended (`YYYY-MM-DD HH:MM:SS`)
+- **Frequency**: Must be consistent (e.g., hourly, daily, weekly)
+- **Example**: `"2024-01-01 00:00:00"`, `"2024-01-01 01:00:00"`, etc.
+
+#### **📊 Exogenous Feature Columns (Optional)**
+- **Purpose**: External variables that influence the target
+- **Format**: Numeric values corresponding to each timestamp
+- **Examples**: 
+  - `"DE_Residual_Load_15M_A_AVG"` (grid load data)
+  - `"DE_Consumption_15M_A_AVG"` (consumption patterns)
+  - `"temperature"`, `"promotion_active"`, `"day_of_week"`
+
+### **📈 Example Dataset Structure**
+
+```csv
+timestamp,DE_Spot_EPEX_1H_A,DE_Residual_Load_15M_A_AVG,DE_Consumption_15M_A_AVG
+2024-01-01 00:00:00,45.23,32145.5,28932.1
+2024-01-01 01:00:00,42.18,31245.2,27845.6
+2024-01-01 02:00:00,38.95,30123.8,26789.3
+2024-01-01 03:00:00,35.76,29456.1,25956.8
+...
+```
+
+
+---
+
 ## Transform Your Data Into Actionable Predictions
 
 Inait Forecasting is a powerful, user-friendly time series forecasting platform that democratizes advanced machine learning for businesses of all sizes. Whether you're predicting sales, demand, prices, or any time-dependent metrics, inait Forecasting delivers accurate forecasts without requiring deep ML expertise.
