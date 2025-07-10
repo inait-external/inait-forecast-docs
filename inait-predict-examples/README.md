@@ -150,7 +150,7 @@ flowchart TD
     D -->|Direct Invoice from INAIT| F{Q3: What is your preference for infrastructure management?}
     F -->|Zero Maintenance| G[SaaS SOLUTION<br>Why: A fully managed service with no operational overhead.]
     F -->|Full Control in own Tenant| H[MANAGED APPLICATION<br>Why: For compliance, access control,<br>or specific policy reasons.]
-    
+```    
 ---
 
 *inait Forecasting: Where advanced machine learning meets practical business solutions.*
