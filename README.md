@@ -36,3 +36,14 @@ This repository will continue to expand with examples for additional marketplace
 ---
 
 *Explore, learn, and build amazing solutions with marketplace applications.*
+
+```mermaid
+flowchart TD
+    A([START HERE])
+    A --> B{Q1: How large is your typical dataset for a single job?}
+    B -->|Massive: > 1 GB| C[SaaS SOLUTION<br>Why: Architected for multi-GB data;<br>avoids upload timeouts.]
+    B -->|Standard: < 1 GB| D{Q2: How do you want to handle billing and procurement?}
+    D -->|Single Bill on Azure Invoice| E[SaaS SOLUTION<br>Why: Simplifies procurement and billing through Azure.]
+    D -->|Direct Invoice from INAIT| F{Q3: What is your preference for infrastructure management?}
+    F -->|Zero Maintenance| G[SaaS SOLUTION<br>Why: A fully managed service with no operational overhead.]
+    F -->|Full Control in own Tenant| H[MANAGED APPLICATION<br>Why: For compliance, control,<br>or specific policy reasons.]
