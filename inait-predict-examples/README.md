@@ -147,7 +147,7 @@ flowchart TD
     B -->|Massive: > 1 GB| C[SaaS SOLUTION<br>Why: Architected for multi-GB data;<br>avoids upload timeouts.]
     B -->|Standard: < 1 GB| D{Q2: How do you want to handle billing and procurement?}
     D -->|Single Bill on Azure Invoice| E[SaaS SOLUTION<br>Why: Simplifies procurement and billing through Azure.]
-    D -->|Direct Invoice from INAIT| F{Q3: What is your preference for infrastructure management?}
+    D -->|One-shot cost + extra support by inait| F{Q3: What is your preference for infrastructure management?}
     F -->|Zero Maintenance| G[SaaS SOLUTION<br>Why: A fully managed service with no operational overhead.]
     F -->|Full Control in own Tenant| H[MANAGED APPLICATION<br>Why: For compliance, access control,<br>or specific policy reasons.]
 ```    
