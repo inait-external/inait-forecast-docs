@@ -4,7 +4,7 @@
 
 ### Prerequisites
 - [UV](https://docs.astral.sh/uv/) - Modern Python package manager
-- Python 3.8+ (automatically handled by UV)
+- Python 3.8+ (automatically handled by [UV](https://docs.astral.sh/uv/))
 - Your URL and API key for inait Forecasting
 
 ### Getting Started
