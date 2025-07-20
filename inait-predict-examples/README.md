@@ -34,6 +34,8 @@ If you have access, [deploy the Managed App now](https://portal.azure.com/#view/
 ---
 
 ## 🎬 Tutorial: Step-by-Step Videos
+(*click each image to go to the video*)
+
 
 ### ▶️ Step 1: Deploy the App in Your Azure Tenant
 This video shows how to install the forecasting app into your own Azure tenant. **Wait up to 20 minutes for provisioning to complete — go grab a coffee.**
@@ -45,7 +47,7 @@ This video shows how to install the forecasting app into your own Azure tenant. 
 ---
 
 ### ▶️ Step 2: Set Up Notebooks and API Access
-Learn how to clone the repo, fetch your credentials, and configure notebooks. You’ll be ready to run live forecasts in just a few minutes. (Starts at 1:30)
+Learn how to clone the repo, fetch your credentials, and configure notebooks. You’ll be ready to run live forecasts in just a few minutes.
 
 <a href="https://vimeo.com/1102971647#t=1m05s" title="Click to watch: Set Up Notebooks and API Access">
   <img src="../assets/terminal.png" alt="Video Tutorial: Set Up Notebooks and API Access" width="500px"/>
@@ -54,22 +56,22 @@ Learn how to clone the repo, fetch your credentials, and configure notebooks. Yo
 ---
 
 ### Getting Started
-1. **Clone and navigate to the directory:**
-   ```bash
-   cd inait-predict-examples
-   ```
-2. **Run the setup script:**
-   ```bash
-   ./setup.sh
-   ```
-3. **Start Jupyter Lab:**
-   ```bash
-   uv run jupyter lab
-   ```
-4. **Open the example notebooks:**
-   Navigate to the `notebook-examples/` folder and choose from:
-   - `basic_functionality.ipynb` - Complete API overview and synchronous predictions
-   - `background_ensemble_prediction.ipynb` or `prediction_intervals_visualization.ipynb` - Asynchronous processing for large datasets
+1.  **Clone and navigate to the directory:**
+    ```bash
+    cd inait-predict-examples
+    ```
+2.  **Run the setup script:**
+    ```bash
+    ./setup.sh
+    ```
+3.  **Start Jupyter Lab:**
+    ```bash
+    uv run jupyter lab
+    ```
+4.  **Open the example notebooks:**
+    Navigate to the `notebook-examples/` folder and choose from:
+    - `basic_functionality.ipynb` - Complete API overview and synchronous predictions
+    - `background_ensemble_prediction.ipynb` or `prediction_intervals_visualization.ipynb` - Asynchronous processing for large datasets
 
 ### Alternative Setup (Manual)
 ```bash
@@ -85,7 +87,7 @@ uv run jupyter notebook notebook-examples/basic_functionality.ipynb
 ---
 
 ### ▶️ Step 3: Run, Customize, and Explore
-Walk through running the notebook cells, customizing inputs, and reviewing results. Swap in your own data and explore what's possible. (Starts at 3:15)
+Walk through running the notebook cells, customizing inputs, and reviewing results. Swap in your own data and explore what's possible.
 
 <a href="https://vimeo.com/1102971647#t=2m10s" title="Click to watch: Run, Customize, and Explore">
   <img src="../assets/notebook.png" alt="Video Tutorial: Run, Customize, and Explore" width="500px"/>
@@ -183,20 +185,6 @@ timestamp,DE_Spot_EPEX_1H_A,DE_Residual_Load_15M_A_AVG,DE_Consumption_15M_A_AVG
 - **Renewable Integration**: Forecast solar and wind energy production.
 - **Grid Management**: Optimize energy distribution and storage.
 
----
-
-## 🧭 Which Solution is Right for You?
-```mermaid
-flowchart TD
-    A([START HERE])
-    A --> B{Q1: How large is your typical dataset for a single job?}
-    B -->|Massive: > 1 GB| C[SaaS SOLUTION<br>Why: Architected for multi-GB data;<br>avoids upload timeouts.]
-    B -->|Standard: < 1 GB| D{Q2: How do you want to handle billing and procurement?}
-    D -->|Single Bill on Azure Invoice| E[SaaS SOLUTION<br>Why: Simplifies procurement and billing through Azure.]
-    D -->|One-shot cost + extra support by inait| F{Q3: What is your preference for infrastructure management?}
-    F -->|Zero Maintenance| G[SaaS SOLUTION<br>Why: A fully managed service with no operational overhead.]
-    F -->|Full Control in own Tenant| H[MANAGED APPLICATION<br>Why: For compliance, access control,<br>or specific policy reasons.]
-```
 ---
 
 ## 💬 Support
