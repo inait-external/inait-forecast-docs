@@ -24,6 +24,14 @@ If you have access, [deploy the Managed App now](https://portal.azure.com/#view/
 > The **Basic plan** provides essential access to core forecasting and prediction capabilities of Inait Forecast. Ideal for users exploring neuro-boosted AI analytics, this plan allows you to evaluate how effectively Inait technology can enhance your data-driven decisions with accurate and reliable predictions.
 
 ---
+## 🛠️ Quick Setup
+
+### Prerequisites
+- [UV](https://docs.astral.sh/uv/) - Modern Python package manager
+- Python 3.8+ (automatically handled by [UV](https://docs.astral.sh/uv/))
+- Your URL and API key for inait Forecasting
+
+---
 
 ## 🎬 Tutorial: Step-by-Step Videos
 
@@ -44,28 +52,6 @@ Learn how to clone the repo, fetch your credentials, and configure notebooks. Yo
 </a>
 
 ---
-
-### ▶️ Step 3: Run, Customize, and Explore
-Walk through running the notebook cells, customizing inputs, and reviewing results. Swap in your own data and explore what's possible. (Starts at 3:15)
-
-<a href="https://vimeo.com/1102971647#t=2m10s" title="Click to watch: Run, Customize, and Explore">
-  <img src="../assets/notebook.png" alt="Video Tutorial: Run, Customize, and Explore" width="500px"/>
-</a>
-
----
-
-## 🧠 Workflow at a Glance
-
-![Workflow diagram](../assets/flowchart-install.png)
-
----
-
-## 🛠️ Quick Setup
-
-### Prerequisites
-- [UV](https://docs.astral.sh/uv/) - Modern Python package manager
-- Python 3.8+ (automatically handled by [UV](https://docs.astral.sh/uv/))
-- Your URL and API key for inait Forecasting
 
 ### Getting Started
 1. **Clone and navigate to the directory:**
@@ -96,6 +82,15 @@ uv run jupyter lab
 # Or run a specific notebook
 uv run jupyter notebook notebook-examples/basic_functionality.ipynb
 ```
+---
+
+### ▶️ Step 3: Run, Customize, and Explore
+Walk through running the notebook cells, customizing inputs, and reviewing results. Swap in your own data and explore what's possible. (Starts at 3:15)
+
+<a href="https://vimeo.com/1102971647#t=2m10s" title="Click to watch: Run, Customize, and Explore">
+  <img src="../assets/notebook.png" alt="Video Tutorial: Run, Customize, and Explore" width="500px"/>
+</a>
+
 ---
 
 ## 📊 Data Format Requirements
