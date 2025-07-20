@@ -11,8 +11,6 @@ Our Azure Marketplace applications are trusted by leading organizations for:
 - API-first integrations, interactive notebooks, and transparent model selection
 - Secure, compliant, and built for scale
 
-Start with our time series forecasting platform, or browse reusable patterns for your next AI-powered workflow.
-
 ---
 
 ## 🔮 Inait Forecasting (Azure Marketplace)
@@ -23,6 +21,16 @@ If you have access, [deploy the Managed App now](https://portal.azure.com/#view/
 
 > _Don’t see the app or don’t have access?_  
 > [Contact us](mailto:contact@inait.ai) for a **private invitation** to the preview offer.
+
+---
+
+## 🌟 About the Basic Plan
+
+![inait Forecast Basic Plan Screenshot](../assets/forecast-marketplace-screenshot.png)
+
+> The **Basic plan** provides essential access to core forecasting and prediction capabilities of Inait Forecast. Ideal for users exploring neuro-boosted AI analytics, this plan allows you to evaluate how effectively Inait technology can enhance your data-driven decisions with accurate and reliable predictions.
+
+Inait Forecast is an innovative AI solution designed to help businesses and analysts effortlessly perform data-driven forecasting and predictions. Utilizing state-of-the-art neuro-boosted AI models, it intelligently explores your datasets, delivering precise forecasts to drive strategic decisions.
 
 ---
 
