@@ -66,4 +66,17 @@ Start with the [Inait Forecasting Examples](./inait-predict-examples/) for the f
 
 ---
 
+## (Soon to come - **SaaS**) 🧭 Which Solution is Right for You?
+```mermaid
+flowchart TD
+&nbsp; &nbsp; A([START HERE])
+&nbsp; &nbsp; A --> B{Q1: How large is your typical dataset for a single job?}
+&nbsp; &nbsp; B -->|Massive: > 1 GB| C[SaaS SOLUTION<br>Why: Architected for multi-GB data;<br>avoids upload timeouts.]
+&nbsp; &nbsp; B -->|Standard: < 1 GB| D{Q2: How do you want to handle billing and procurement?}
+&nbsp; &nbsp; D -->|Single Bill on Azure Invoice| E[SaaS SOLUTION<br>Why: Simplifies procurement and billing through Azure.]
+&nbsp; &nbsp; D -->|One-shot cost + extra support by inait| F{Q3: What is your preference for infrastructure management?}
+&nbsp; &nbsp; F -->|Zero Maintenance| G[SaaS SOLUTION<br>Why: A fully managed service with no operational overhead.]
+&nbsp; &nbsp; F -->|Full Control in own Tenant| H[MANAGED APPLICATION<br>Why: For compliance, access control,<br>or specific policy reasons.]
+```
+
 *Turn your data into real business results — with inait’s enterprise AI solutions.*
