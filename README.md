@@ -26,7 +26,7 @@ If you have access, [deploy the Managed App now](https://portal.azure.com/#view/
 
 ## 🌟 About the Basic Plan
 
-![inait Forecast Basic Plan Screenshot](../assets/forecast-marketplace-screenshot.png)
+![inait Forecast Basic Plan Screenshot](./assets/forecast-marketplace-screenshot.png)
 
 > The **Basic plan** provides essential access to core forecasting and prediction capabilities of Inait Forecast. Ideal for users exploring neuro-boosted AI analytics, this plan allows you to evaluate how effectively Inait technology can enhance your data-driven decisions with accurate and reliable predictions.
 
