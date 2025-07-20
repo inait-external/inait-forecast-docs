@@ -1,38 +1,61 @@
 # 🛠️ Marketplace Examples
 
-Welcome to the Marketplace Examples repository! This collection showcases practical implementations and usage examples for various marketplace applications and services.
+**inait** builds production-grade, enterprise-ready AI solutions that unlock the value of your data — fast.
 
-## 📁 Available Examples
+This repository gives you hands-on, technical examples for deploying, integrating, and operationalizing inait’s flagship forecasting engine and other marketplace-ready AI tools. Every example is designed for rapid onboarding and real-world scalability, helping you move from proof-of-concept to business impact in days, not months.
+
+Our Azure Marketplace applications are trusted by leading organizations for:
+
+- Reliable, explainable AI forecasts for sales, demand, prices, and energy
+- Seamless deployment in your Azure tenant — with zero infrastructure headaches
+- API-first integrations, interactive notebooks, and transparent model selection
+- Secure, compliant, and built for scale
+
+Start with our time series forecasting platform, or browse reusable patterns for your next AI-powered workflow.
+
+---
+
+## 🔮 Inait Forecasting (Azure Marketplace)
+[![Deploy on Azure](https://img.shields.io/badge/Deploy_on-Azure-blue?logo=microsoft-azure)](https://portal.azure.com/#view/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/inaitsa1696941874379.inait_forecast-preview/)
+
+**Direct Azure deployment:**  
+If you have access, [deploy the Managed App now](https://portal.azure.com/#view/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/inaitsa1696941874379.inait_forecast-preview/).
+
+> _Don’t see the app or don’t have access?_  
+> [Contact us](mailto:contact@inait.ai) for a **private invitation** to the preview offer.
+
+---
+
+## 📦 Available Examples
 
 ### 🔮 [Inait Forecasting Examples](./inait-predict-examples/)
-Comprehensive examples for the Inait Forecasting platform - a powerful time series forecasting solution that makes advanced machine learning accessible for businesses of all sizes.
 
-**What you'll find:**
-- Client implementation examples
-- Prediction scripts and workflows
-- Data visualization and plotting utilities
-- Interactive Jupyter notebooks for hands-on learning
+A robust, easy-to-use time series forecasting platform — now available for fast deployment from [Azure Marketplace](https://portal.azure.com/#view/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/inaitsa1696941874379.inait_forecast-preview/).
 
-**Perfect for:** Sales forecasting, demand planning, financial predictions, and any time-dependent business metrics.
+- 🏆 5 intelligent models for any use case
+- 🚀 Ready-to-use notebooks and API examples
+- 📊 No ML expertise required
+- 🧑‍💻 [Jump to setup & demo ›](./inait-predict-examples/)
+
+---
+
+## 🧭 Repo Structure
+
+| Folder                  | Purpose                                             |
+|-------------------------|-----------------------------------------------------|
+| `inait-predict-examples/` | Forecasting example suite and documentation         |
+| `client/`               | Integration code and API clients                   |
+| `data/`                 | Sample datasets                                    |
+| `notebook-examples/`    | Interactive Jupyter notebooks                      |
+| `setup.sh`              | Quick environment bootstrap                        |
 
 ---
 
 ## 🚀 Getting Started
 
-Each example folder contains its own README with specific setup instructions and usage guidelines. Navigate to the application folder you're interested in to begin.
-
-## 📋 Example Structure
-
-Each application example follows a consistent structure:
-- **Client Code**: Ready-to-use implementation examples
-- **Documentation**: Detailed READMEs and guides
-- **Interactive Examples**: Jupyter notebooks for exploration
-- **Utilities**: Helper scripts and common functions
-
-## 🔄 Coming Soon
-
-This repository will continue to expand with examples for additional marketplace applications. Stay tuned for more powerful tools and integrations!
+Each example contains its own README with specific setup and usage guidelines.
+Start with the [Inait Forecasting Examples](./inait-predict-examples/) for the fastest onboarding experience.
 
 ---
 
-*Explore, learn, and build amazing solutions with marketplace applications.*
+*Turn your data into real business results — with inait’s enterprise AI solutions.*
