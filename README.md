@@ -1,3 +1,5 @@
+[![run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
+
 # 🛠️ Marketplace Examples
 
 **inait** builds production-grade, enterprise-ready AI solutions that unlock the value of your data — fast.
