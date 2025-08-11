@@ -4,7 +4,9 @@ from typing import Optional
 from .utils import make_request, parse_common_arguments
 
 
-def get_dataframe_from_response(response: dict) -> tuple[pd.DataFrame, str]:
+def get_dataframe_from_response(
+    response: dict,
+) -> tuple[pd.DataFrame | None, str | None]:
     """
     Extract DataFrame and session_id from the prediction response.
 
@@ -63,7 +65,7 @@ def create_payload_from_file(
             "Unsupported file format. Please provide a CSV or Parquet file."
         )
 
-    payload = {
+    return {
         "data": df.to_dict(orient="split"),
         "config": {
             "operation": "forecast",
@@ -79,7 +81,6 @@ def create_payload_from_file(
         },
         "background": background,  # Support for background/asynchronous execution
     }
-    return payload
 
 
 def parse_arguments():
@@ -168,4 +169,4 @@ if __name__ == "__main__":
             session_id = prediction_response["response"]["session_id"]
             print(f"Generated session_id: {session_id}")
     except Exception as e:
-        print(str(e))
+        print(e)
