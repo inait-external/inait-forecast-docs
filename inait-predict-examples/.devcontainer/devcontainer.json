@@ -1,0 +1,9 @@
+{
+  "name": "inait-forecast-docs",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "postCreateCommand": "bash -lc 'set -euxo pipefail; export PATH=$HOME/.local/bin:$PATH; cd inait-predict-examples; curl -LsSf https://astral.sh/uv/install.sh | sh; chmod +x ./setup.sh; ./setup.sh || true; ./setup.sh'",
+  "remoteUser": "vscode"
+}
