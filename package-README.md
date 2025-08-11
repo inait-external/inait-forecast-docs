@@ -28,7 +28,7 @@ If you have access, [deploy the Managed App now](https://portal.azure.com/#view/
 
 ### Prerequisites
 - [UV](https://docs.astral.sh/uv/) - Modern Python package manager
-- Python 3.8+ (automatically handled by [UV](https://docs.astral.sh/uv/))
+- Python 3.9+ (automatically handled by [UV](https://docs.astral.sh/uv/))
 - Your URL and API key for inait Forecasting
 
 ---

@@ -14,7 +14,7 @@ __author__ = "Inait Team"
 
 __all__ = [
     "make_request",
-    "make_get_request", 
+    "make_get_request",
     "create_payload_from_file",
     "get_dataframe_from_response",
     "create_plot_payload",
