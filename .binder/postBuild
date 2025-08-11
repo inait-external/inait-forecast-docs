@@ -8,5 +8,5 @@ export PATH="$HOME/.local/bin:$PATH"
 # Install uv (official installer)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Synchronize the environment
-uv sync
+# Install the environment
+uv pip install --system -e .
