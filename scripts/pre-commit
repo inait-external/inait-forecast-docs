@@ -1,0 +1,12 @@
+HELP_MSG='Some checks failed. Please run `make fmt` to fix formatting issues.'
+
+uv run ruff check . || {
+    echo $HELP_MSG
+    echo 'Run `uv run ruff check --fix .` to fix the issues.'
+    exit 1
+}
+uv run ruff format --check . || {
+    echo $HELP_MSG
+    echo 'Run `uv run ruff format .` to fix the issues.'
+    exit 1
+}
