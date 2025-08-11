@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euxo pipefail
+
+# Build phase runs once per image (great for installing tools + deps).
+# Binder runs as a non-root user; install uv to ~/.local/bin.
+export PATH="$HOME/.local/bin:$PATH"
+
+# Install uv (official installer)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Make sure setup.sh is executable (harmless if it already is)
+chmod +x ./setup.sh
+
+# Run your provisioning steps. First run may create env, second ensures idempotency.
+./setup.sh || true
+./setup.sh
+
