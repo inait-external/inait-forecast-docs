@@ -21,4 +21,6 @@ __all__ = [
     "plot_image",
     "bytes_from_base64",
     "create_explanation_payload",
+    "predict",
+    "plot",
 ]

@@ -138,6 +138,48 @@ def parse_arguments():
     )
     return parser.parse_args()
 
+def predict(
+        base_url: str,
+        auth_key: str,
+        data_path: str,
+        target_columns: list,
+        forecasting_horizon: int,
+        observation_length: int
+):
+    """
+    Trains a model using the data in the target columns in a .csv file located at the specified path.
+
+    Args:
+        base_url (str): The base URL of the Inait Forecasting API.
+        auth_key (str): The authentication key for the API.
+        data_path (str): Path to the CSV file containing the data.
+        target_columns (list): List of target columns to predict.
+        forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
+        observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
+
+    Returns:
+        dict: The response from the API containing the prediction results.
+    """
+
+    payload = create_payload_from_file(
+        file_path=data_path,
+        target_columns=",".join(target_columns),
+        forecasting_horizon=forecasting_horizon,
+        observation_length=observation_length,
+    )
+
+    # Send prediction request to the API
+    response = make_request(base_url + "/prediction", payload, auth_key=auth_key)
+
+    # Process the response and extract results
+    df, session_id = get_dataframe_from_response(response)
+
+    df_wide = df.drop('cutoff', axis=1).pivot(index='ds', columns='unique_id', values='Inait')
+    df_wide.index.name = None
+    df_wide.columns = [f"{col}_predicted" for col in df_wide.columns]
+
+    return df_wide, session_id
+
 
 # Example usage
 if __name__ == "__main__":
@@ -170,3 +212,4 @@ if __name__ == "__main__":
             print(f"Generated session_id: {session_id}")
     except Exception as e:
         print(e)
+    

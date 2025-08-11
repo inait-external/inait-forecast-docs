@@ -5,6 +5,8 @@ from typing import Optional
 from .utils import make_request
 import matplotlib.pyplot as plt
 from io import BytesIO
+import plotly.express as px
+import pandas as pd
 
 
 def plot_image(image_bytes: bytes):
@@ -102,6 +104,27 @@ def parse_arguments():
         help="Prediction target for the plot (optional).",
     )
     return parser.parse_args()
+
+
+def plot(
+       historical_data: pd.DataFrame,
+       predicted_data: pd.DataFrame,
+):
+    """
+    Plots the actual vs predicted values.
+
+    Args:
+        historical_data (pd.DataFrame): The actual data.
+        predicted_data (pd.DataFrame): The predicted data.
+
+    Returns:
+        plotly.graph_objects.Figure: The figure object containing the plot.
+    """
+
+    fig = px.line(pd.concat([historical_data, predicted_data], axis=1))
+    fig.update_xaxes(title_text="Date")
+    fig.update_yaxes(title_text="")
+    fig.show()
 
 
 if __name__ == "__main__":
