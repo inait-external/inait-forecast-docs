@@ -107,8 +107,8 @@ def parse_arguments():
 
 
 def plot(
-       historical_data: pd.DataFrame,
-       predicted_data: pd.DataFrame,
+    historical_data: pd.DataFrame,
+    predicted_data: pd.DataFrame,
 ):
     """
     Plots the actual vs predicted values.

@@ -138,13 +138,14 @@ def parse_arguments():
     )
     return parser.parse_args()
 
+
 def predict(
-        base_url: str,
-        auth_key: str,
-        data_path: str,
-        target_columns: list,
-        forecasting_horizon: int,
-        observation_length: int
+    base_url: str,
+    auth_key: str,
+    data_path: str,
+    target_columns: list,
+    forecasting_horizon: int,
+    observation_length: int,
 ):
     """
     Trains a model using the data in the target columns in a .csv file located at the specified path.
@@ -174,7 +175,9 @@ def predict(
     # Process the response and extract results
     df, session_id = get_dataframe_from_response(response)
 
-    df_wide = df.drop('cutoff', axis=1).pivot(index='ds', columns='unique_id', values='Inait')
+    df_wide = df.drop("cutoff", axis=1).pivot(
+        index="ds", columns="unique_id", values="Inait"
+    )
     df_wide.index.name = None
     df_wide.columns = [f"{col}_predicted" for col in df_wide.columns]
 
@@ -212,4 +215,3 @@ if __name__ == "__main__":
             print(f"Generated session_id: {session_id}")
     except Exception as e:
         print(e)
-    

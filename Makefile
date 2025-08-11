@@ -20,8 +20,8 @@ init:
 	
 	uv sync
 
-	mv scripts/pre-commit .git/hooks/pre-commit
-	mv scripts/pre-push .git/hooks/pre-push
+	cp scripts/pre-commit .git/hooks/pre-commit
+	cp scripts/pre-push .git/hooks/pre-push
 
 	@echo "🎉 Environment setup complete!"
 	@echo ""
@@ -40,9 +40,7 @@ init:
 	@echo "   source .venv/bin/activate"
 
 
-
 fmt:			## Auto-format code.
 	uv run ruff check --fix .
 	uv run ruff format .
-
-
+	find . -name '*.ipynb' -exec uv run jupyter nbconvert --clear-output --inplace {} \+
