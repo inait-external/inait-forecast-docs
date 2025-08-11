@@ -25,14 +25,19 @@ init:
 
 	@echo "🎉 Environment setup complete!"
 	@echo ""
-	@echo "To activate the environment and start Jupyter:"
-	@echo "  uv run jupyter lab"
+	@echo "📋 Next steps:"
+	@echo "1. Copy sample.env to .env and add your API credentials:"
+	@echo "   cp sample.env .env"
+	@echo "   # Then edit .env with your API_BASE_URL and API_AUTH_KEY"
 	@echo ""
-	@echo "Or to run the notebook directly:"
-	@echo "  uv run jupyter notebook basic_functionality.ipynb"
+	@echo "2. To activate the environment and start Jupyter:"
+	@echo "   uv run jupyter lab"
 	@echo ""
-	@echo "To activate the shell environment:"
-	@echo "  source .venv/bin/activate"
+	@echo "   Or to run the notebook directly:"
+	@echo "   uv run jupyter notebook notebook-examples/0_quickstart.ipynb"
+	@echo ""
+	@echo "   Or to activate the shell environment:"
+	@echo "   source .venv/bin/activate"
 
 
 

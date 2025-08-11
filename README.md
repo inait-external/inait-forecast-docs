@@ -55,11 +55,30 @@ A robust, easy-to-use time series forecasting platform — now available for fas
 | `client/`               | Integration code and API clients                   |
 | `data/`                 | Sample datasets                                    |
 | `notebook-examples/`    | Interactive Jupyter notebooks                      |
-| `setup.sh`              | Quick environment bootstrap                        |
+| `Makefile`              | Project setup and development tools                |
+| `sample.env`            | Template for API credentials                       |
 
 ---
 
 ## 🚀 Getting Started
+
+### Quick Setup
+
+1. **Install dependencies and set up the environment:**
+   ```bash
+   make init
+   ```
+
+2. **Configure API credentials:**
+   ```bash
+   cp sample.env .env
+   # Edit .env with your API_BASE_URL and API_AUTH_KEY
+   ```
+
+3. **Start exploring with Jupyter notebooks:**
+   ```bash
+   uv run jupyter lab
+   ```
 
 Each example contains its own README with specific setup and usage guidelines.
 Start with the [Inait Forecasting Examples](./inait-predict-examples/) for the fastest onboarding experience.
