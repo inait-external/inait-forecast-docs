@@ -109,6 +109,7 @@ def parse_arguments():
 def plot(
     historical_data: pd.DataFrame,
     predicted_data: pd.DataFrame,
+    observation_length: Optional[int] = None,
 ):
     """
     Plots the actual vs predicted values.
@@ -116,12 +117,22 @@ def plot(
     Args:
         historical_data (pd.DataFrame): The actual data.
         predicted_data (pd.DataFrame): The predicted data.
+        observation_length (int): How many past observations to include in the plot.
 
     Returns:
         plotly.graph_objects.Figure: The figure object containing the plot.
     """
+    if not observation_length:
+        observation_length = (
+            predicted_data.shape[0] * 3
+            if predicted_data.shape[0] * 3 < historical_data.shape[0]
+            else historical_data.shape[0]
+        )
 
-    fig = px.line(pd.concat([historical_data, predicted_data], axis=1))
+    fig = px.line(
+        pd.concat([historical_data.iloc[-observation_length:], predicted_data], axis=1),
+        markers=True if len(predicted_data) == 1 else False,
+    )
     fig.update_xaxes(title_text="Date")
     fig.update_yaxes(title_text="")
     fig.show()

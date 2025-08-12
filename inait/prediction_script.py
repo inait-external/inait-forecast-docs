@@ -143,9 +143,11 @@ def predict(
     base_url: str,
     auth_key: str,
     data_path: str,
-    target_columns: list,
     forecasting_horizon: int,
     observation_length: int,
+    target_columns: list,
+    feature_columns: Optional[list] = None,
+    models: Optional[list[str]] = ["basic"],
 ):
     """
     Trains a model using the data in the target columns in a .csv file located at the specified path.
@@ -155,8 +157,10 @@ def predict(
         auth_key (str): The authentication key for the API.
         data_path (str): Path to the CSV file containing the data.
         target_columns (list): List of target columns to predict.
+        feature_columns (Optional[list]): List of feature columns to use for prediction.
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
+        models (Optional[list[str]]): List of models to use for prediction. Defaults to ["basic"]. Available options are: ["basic", "robust", "neural", "gradient_boost", "fast_boost"]. Also supports ensembling models.
 
     Returns:
         dict: The response from the API containing the prediction results.
@@ -167,6 +171,8 @@ def predict(
         target_columns=",".join(target_columns),
         forecasting_horizon=forecasting_horizon,
         observation_length=observation_length,
+        feature_columns=",".join(feature_columns) if feature_columns else None,
+        models=",".join(models),
     )
 
     # Send prediction request to the API
