@@ -132,12 +132,11 @@ def explain(
         color=explanation["shap_value"],
         color_continuous_scale=["red", "lightgray", "blue"],
         color_continuous_midpoint=0,
-        labels={"x": "Feature Importance", "y": "Features"},
-        title="Feature Importance",
+        title="Main drivers of predictions",
     )
 
     fig.update_layout(
-        xaxis_title="Feature Importance (impact on model output)",
+        xaxis_title="Impact of each feature on the prediction",
         yaxis_title="Features",
         coloraxis_showscale=False,
         height=max(
