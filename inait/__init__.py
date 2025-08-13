@@ -4,9 +4,13 @@ Inait Forecasting Client Package
 This package contains client utilities and scripts for interacting with the Inait Forecasting API.
 """
 
-from .utils import make_request, make_get_request
-from .prediction_script import create_payload_from_file, get_dataframe_from_response
-from .plot_script import create_plot_payload, plot_image, bytes_from_base64
+from .utils import make_request, make_get_request, load_credentials
+from .prediction_script import (
+    create_payload_from_file,
+    get_dataframe_from_response,
+    predict,
+)
+from .plot_script import create_plot_payload, plot_image, bytes_from_base64, plot
 from .explanation_script import create_explanation_payload
 
 __version__ = "0.1.0"
@@ -23,4 +27,5 @@ __all__ = [
     "create_explanation_payload",
     "predict",
     "plot",
+    "load_credentials",
 ]

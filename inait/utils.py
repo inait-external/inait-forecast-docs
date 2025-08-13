@@ -2,6 +2,21 @@ import requests
 import argparse
 import os
 from typing import Optional
+from dotenv import load_dotenv
+
+
+def load_credentials(path: str) -> tuple[str, str]:
+    load_dotenv(path)
+
+    base_url = os.environ.get("API_BASE_URL")
+    auth_key = os.environ.get("API_AUTH_KEY")
+
+    if not base_url or not auth_key:
+        raise ValueError(
+            "❌ Missing environment variables. Please set API_BASE_URL and API_AUTH_KEY in credentials.txt."
+        )
+
+    return base_url, auth_key
 
 
 def make_request(url: str, payload: dict, auth_key: Optional[str] = None):
@@ -24,11 +39,10 @@ def make_request(url: str, payload: dict, auth_key: Optional[str] = None):
         headers["Authorization"] = f"Bearer {auth_key}"
 
     response = requests.post(url, json=payload, headers=headers)
-    if response.status_code in [200, 202]:
-        response = response.json()
-        return response
-    else:
+    if response.status_code not in {200, 202}:
         raise Exception(f"Error: {response.status_code}, {response.text}")
+    response = response.json()
+    return response
 
 
 def make_get_request(
@@ -52,18 +66,14 @@ def make_get_request(
     if session_id is not None:
         url = f"{url}{session_id}"
         status_response = requests.get(f"{url}", headers=headers)
-        if status_response.status_code != 200:
-            raise Exception(
-                f"Status check failed for url {url}: {status_response.status_code}, {status_response.text}"
-            )
-        return status_response.json()
     else:
         status_response = requests.get(url, headers=headers)
-        if status_response.status_code != 200:
-            raise Exception(
-                f"Status check failed for url {url}: {status_response.status_code}, {status_response.text}"
-            )
-        return status_response.json()
+
+    if status_response.status_code != 200:
+        raise Exception(
+            f"Status check failed for url {url}: {status_response.status_code}, {status_response.text}"
+        )
+    return status_response.json()
 
 
 def parse_common_arguments():
