@@ -149,6 +149,7 @@ def predict(
     feature_columns: Optional[list] = None,
     prediction_interval_levels: Optional[float] = None,
     models: Optional[list[str]] = ["basic"],
+    positive_predictions_only: bool = False,
 ):
     """
     Trains a model using the data in the target columns in a .csv file located at the specified path.
@@ -195,6 +196,10 @@ def predict(
     # Merge levels into a single column name
     df_wide.columns = [f"{b}_{a}" if b else str(a) for a, b in df_wide.columns]
     df_wide.columns = df_wide.columns.str.replace(r"_Inait", "_predicted", regex=True)
+
+    if positive_predictions_only:
+        # Ensure all predictions are non-negative
+        df_wide = df_wide.clip(lower=0)
 
     return df_wide, session_id
 
