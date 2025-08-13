@@ -8,6 +8,7 @@ from io import BytesIO
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import math
 
 
 def plot_image(image_bytes: bytes):
@@ -111,6 +112,7 @@ def plot(
     historical_data: pd.DataFrame,
     predicted_data: pd.DataFrame,
     observation_length=None,
+    legend_title_predicted="Predicted",
 ):
     """
     Plots the actual vs predicted values.
@@ -119,6 +121,7 @@ def plot(
         historical_data (pd.DataFrame): The actual data.
         predicted_data (pd.DataFrame): The predicted data.
         observation_length (int): How many past observations to include in the plot.
+        legend_title_predicted (str): The legend title for the predicted data.
 
     Returns:
         plotly.graph_objects.Figure: The figure object containing the plot.
@@ -163,7 +166,7 @@ def plot(
 
     nplots = len(df_predicted.columns)
     ncols = 1 if nplots == 1 else 2
-    nrows = nplots // ncols  # Ceiling division
+    nrows = math.ceil(nplots / ncols)
 
     fig = make_subplots(rows=nrows, cols=ncols, subplot_titles=historical_data.columns)
 
@@ -236,7 +239,7 @@ def plot(
                 x=df_predicted.index,
                 y=df_predicted[col],
                 mode="markers+lines" if len(df_predicted) == 1 else "lines",
-                name="Predicted",
+                name=legend_title_predicted,
                 showlegend=not pred_legend_added,
                 line=dict(color=predicted_color),
                 legendgroup="pred",

@@ -2,6 +2,11 @@ import pandas as pd
 import argparse
 from typing import Optional
 from .utils import make_request, parse_common_arguments
+from tqdm import tqdm
+from sklearn.metrics import (
+    mean_absolute_error,
+    mean_squared_error,
+)  # to be removed in future version
 
 
 def get_dataframe_from_response(
@@ -31,7 +36,7 @@ def get_dataframe_from_response(
 
 
 def create_payload_from_file(
-    file_path: str,
+    data: pd.DataFrame,
     target_columns: str,
     forecasting_horizon: int,
     observation_length: int,
@@ -44,7 +49,7 @@ def create_payload_from_file(
     Creates a JSON payload for the prediction request using a CSV or Parquet file.
 
     Args:
-        file_path (str): Path to the file (CSV or Parquet).
+        data (pd.DataFrame): DataFrame containing the input data.
         target_columns (str): Comma-separated string of column names to predict.
         feature_columns (Optional[str]): Comma-separated string of feature column names.
         models (str): Comma-separated list of models to use.
@@ -56,17 +61,9 @@ def create_payload_from_file(
     Returns:
         dict: The JSON payload for the prediction request.
     """
-    if file_path.endswith(".csv"):
-        df = pd.read_csv(file_path)
-    elif file_path.endswith(".parquet"):
-        df = pd.read_parquet(file_path)
-    else:
-        raise ValueError(
-            "Unsupported file format. Please provide a CSV or Parquet file."
-        )
 
     return {
-        "data": df.to_dict(orient="split"),
+        "data": data.to_dict(orient="split"),
         "config": {
             "operation": "forecast",
             "operation_arguments": {
@@ -142,34 +139,34 @@ def parse_arguments():
 def predict(
     base_url: str,
     auth_key: str,
-    data_path: str,
+    data: pd.DataFrame,
     forecasting_horizon: int,
     observation_length: int,
     target_columns: list[str] | str,
+    positive_predictions_only: bool = False,
     feature_columns: Optional[list] = None,
     prediction_interval_levels: Optional[float] = None,
     models: Optional[list[str]] = ["basic"],
-    positive_predictions_only: bool = False,
-):
+) -> dict[pd.DataFrame, str]:
     """
-    Trains a model using the data in the target columns in a .csv file located at the specified path.
+    Trains a model using the target columns of given dataframe, and outputs a single prediction of `forecasting_horizon` length.
 
     Args:
         base_url (str): The base URL of the Inait Forecasting API.
         auth_key (str): The authentication key for the API.
-        data_path (str): Path to the CSV file containing the data.
-        target_columns (list or str): Individual string of target column or list of strings of target columns to predict.
+        data (pd.DataFrame): DataFrame containing the data.
+        target_columns (list): List of target columns to predict.
         feature_columns (Optional[list]): List of feature columns to use for prediction.
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
         models (Optional[list[str]]): List of models to use for prediction. Defaults to ["basic"]. Available options are: ["basic", "robust", "neural", "gradient_boost", "fast_boost"]. Also supports ensembling models.
 
     Returns:
-        dict: The response from the API containing the prediction results.
+        dict: The response from the API containing the prediction results and the session id.
     """
 
     payload = create_payload_from_file(
-        file_path=data_path,
+        data=data,
         target_columns=",".join(target_columns),
         forecasting_horizon=forecasting_horizon,
         observation_length=observation_length,
@@ -196,12 +193,106 @@ def predict(
     # Merge levels into a single column name
     df_wide.columns = [f"{b}_{a}" if b else str(a) for a, b in df_wide.columns]
     df_wide.columns = df_wide.columns.str.replace(r"_Inait", "_predicted", regex=True)
-
     if positive_predictions_only:
         # Ensure all predictions are non-negative
         df_wide = df_wide.clip(lower=0)
+    return dict(prediction=df_wide, session_id=session_id)
 
-    return df_wide, session_id
+
+def predict_test(
+    base_url: str,
+    auth_key: str,
+    data: pd.DataFrame,
+    target_columns: list,
+    forecasting_horizon: int,
+    observation_length: int,
+    train_size: Optional[float] = None,
+    test_size: Optional[int] = None,
+    model: Optional[str] = "Inait-basic",
+) -> dict[list[pd.DataFrame], list[str]]:
+    """
+    Trains a model using the target columns of given dataframe, and outputs a list of N predictions, with N being the number of test samples.
+
+    Args:
+        base_url (str): The base URL of the Inait Forecasting API.
+        auth_key (str): The authentication key for the API.
+        data (pd.DataFrame): DataFrame containing the data.
+        target_columns (list): List of target columns to predict.
+        forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
+        observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
+        train_size (float): Proportion of the dataset to include in the train split. If both train_size and test_size are not specified, train_size will be set to 0.8.
+        test_size (int): Number of samples to include in the test split. If both train_size and test_size are not specified, test_size will be set to 0.2.
+        model str: Model to use for prediction. Defaults to "Inait-basic". Available options are: ["Inait-basic", "Inait-advanced", "Inait-best"].
+
+    Returns:
+        dict[list[pd.DataFrame], list[str]]: A dictionary containing a list of DataFrames with predictions and a list of session IDs.
+    """
+    if train_size is not None and test_size is not None:
+        raise ValueError(
+            "Both train_size and test_size cannot be specified at the same time. Please specify only one of them."
+        )
+    if train_size is not None:
+        start_test_index = int(len(data) * train_size)
+    elif test_size is not None:
+        start_test_index = len(data) - test_size - forecasting_horizon
+    else:
+        start_test_index = int(len(data) * 0.8)
+
+    if model == "Inait-basic":
+        models = ["basic"]
+    elif model == "Inait-advanced":
+        models = ["gradient_boost"]
+    elif model == "Inait-best":
+        models = ["robust", "fast_boost", "gradient_boost"]
+
+    predictions = []
+    session_ids = []
+    # TODO: allow for different strides
+    for t in tqdm(range(start_test_index, len(data) - forecasting_horizon)):
+        results = predict(
+            base_url=base_url,
+            auth_key=auth_key,
+            data=data.iloc[:t],
+            target_columns=target_columns,
+            forecasting_horizon=forecasting_horizon,
+            observation_length=observation_length,
+            models=models,
+        )
+        predictions.append(results["prediction"])
+        session_ids.append(results["session_id"])
+    return dict(predictions=predictions, session_ids=session_ids)
+
+
+def score_test(
+    predictions: list[pd.DataFrame], ground_truth: pd.DataFrame, metric: str = "mae"
+):
+    """
+    Computes the score between predictions and ground truth using the specified metric.
+
+    Args:
+        predictions (list[pd.DataFrame]): List of DataFrames with predictions.
+        ground_truth (pd.DataFrame): DataFrame with ground truth values.
+        metric (str): The metric to use for scoring. Defaults to "mae". Options are: ["mae", "mse"].
+
+    Returns:
+        float: The computed score.
+    """
+    if metric not in ["mae", "mse"]:
+        raise ValueError(
+            f"Invalid metric: {metric}. Supported metrics are: ['mae', 'mse']"
+        )
+
+    score = 0
+    # if stride < forecasting_horizon then predictions overlap, all horizons are weighted equally
+    for prediction in predictions:
+        common_idxs = list(set(prediction.index).intersection(set(ground_truth.index)))
+        prediction = prediction.loc[common_idxs]
+        _ground_truth = ground_truth.loc[common_idxs]
+        if metric == "mae":
+            score += mean_absolute_error(_ground_truth, prediction)
+        elif metric == "mse":
+            score += mean_squared_error(_ground_truth, prediction)
+    return score / len(predictions)
 
 
 # Example usage

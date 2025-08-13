@@ -9,6 +9,8 @@ from .prediction_script import (
     create_payload_from_file,
     get_dataframe_from_response,
     predict,
+    predict_test,
+    score_test,
 )
 from .plot_script import create_plot_payload, plot_image, bytes_from_base64, plot
 from .explanation_script import explain, create_explanation_payload
@@ -29,4 +31,6 @@ __all__ = [
     "plot",
     "predict",
     "load_credentials",
+    "predict_test",
+    "score_test",
 ]
