@@ -145,8 +145,9 @@ def predict(
     data_path: str,
     forecasting_horizon: int,
     observation_length: int,
-    target_columns: list,
+    target_columns: list[str] | str,
     feature_columns: Optional[list] = None,
+    prediction_interval_levels: Optional[float] = None,
     models: Optional[list[str]] = ["basic"],
 ):
     """
@@ -156,7 +157,7 @@ def predict(
         base_url (str): The base URL of the Inait Forecasting API.
         auth_key (str): The authentication key for the API.
         data_path (str): Path to the CSV file containing the data.
-        target_columns (list): List of target columns to predict.
+        target_columns (list or str): Individual string of target column or list of strings of target columns to predict.
         feature_columns (Optional[list]): List of feature columns to use for prediction.
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
@@ -173,6 +174,9 @@ def predict(
         observation_length=observation_length,
         feature_columns=",".join(feature_columns) if feature_columns else None,
         models=",".join(models),
+        prediction_interval_levels=str(prediction_interval_levels)
+        if prediction_interval_levels
+        else None,
     )
 
     # Send prediction request to the API
@@ -181,11 +185,16 @@ def predict(
     # Process the response and extract results
     df, session_id = get_dataframe_from_response(response)
 
+    columns_inait = [c for c in df.columns if c.startswith("Inait")]
     df_wide = df.drop("cutoff", axis=1).pivot(
-        index="ds", columns="unique_id", values="Inait"
+        index="ds", columns="unique_id", values=columns_inait
     )
+
     df_wide.index.name = None
-    df_wide.columns = [f"{col}_predicted" for col in df_wide.columns]
+
+    # Merge levels into a single column name
+    df_wide.columns = [f"{b}_{a}" if b else str(a) for a, b in df_wide.columns]
+    df_wide.columns = df_wide.columns.str.replace(r"_Inait", "_predicted", regex=True)
 
     return df_wide, session_id
 
