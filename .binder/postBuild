@@ -8,5 +8,9 @@ export PATH="$HOME/.local/bin:$PATH"
 # Install uv (official installer)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install the environment
+# Install the environment from your project files
 uv pip install --system -e .
+
+# Install and enable the execution time extension
+uv pip install --system jupyterlab-execute-time
+jupyter labextension enable @jupyterlab/notebook-extension:tracker
