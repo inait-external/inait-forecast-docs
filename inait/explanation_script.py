@@ -61,7 +61,7 @@ def explain(
     historical_data: pd.DataFrame,
     cutoff_date: Optional[str] = None,
     forecasted_step: Optional[int] = 0,
-    max_features_displayed: int = 10,
+    max_drivers_displayed: int = 10,
 ):
     """
     Generate and display a feature importance explanation for the model predictions.
@@ -102,11 +102,11 @@ def explain(
         drop=True
     )
     excluded_features_sum = (
-        explanation["shap_value"].iloc[max_features_displayed:].sum()
+        explanation["shap_value"].iloc[max_drivers_displayed:].sum()
     )
-    number_of_excluded_features = max(explanation.shape[0] - max_features_displayed, 0)
+    number_of_excluded_features = max(explanation.shape[0] - max_drivers_displayed, 0)
     explanation = explanation.head(
-        max_features_displayed
+        max_drivers_displayed
     )  # Limit to the top N features
     if number_of_excluded_features > 0:
         explanation = pd.concat(

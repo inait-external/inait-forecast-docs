@@ -136,6 +136,24 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def process_models(models: Optional[str] = None):
+    if models is None:
+        models = ["inait-basic"]
+    elif isinstance(models, str):
+        models = [models]
+    elif not isinstance(models, list):
+        raise TypeError("models must be a string or None")
+    
+    if models == ["inait-basic"]:
+        models = ["basic"]
+    elif models == ["inait-advanced"]:
+        models = ["basic","gradient_boost"]
+    elif models == ["inait-best"]:
+        models = ["robust", "fast_boost", "gradient_boost"]
+
+    return models
+
+
 def predict(
     base_url: str,
     auth_key: str,
@@ -146,24 +164,25 @@ def predict(
     positive_predictions_only: bool = False,
     feature_columns: Optional[list] = None,
     prediction_interval_levels: Optional[float] = None,
-    models: Optional[list[str]] = ["basic"],
+    model: Optional[str] = None,
 ) -> dict[pd.DataFrame, str]:
     """
     Trains a model using the target columns of given dataframe, and outputs a single prediction of `forecasting_horizon` length.
 
     Args:
-        base_url (str): The base URL of the Inait Forecasting API.
+        base_url (str): The base URL of the inait Forecasting API.
         auth_key (str): The authentication key for the API.
         data (pd.DataFrame): DataFrame containing the data.
         target_columns (list): List of target columns to predict.
         feature_columns (Optional[list]): List of feature columns to use for prediction.
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
-        models (Optional[list[str]]): List of models to use for prediction. Defaults to ["basic"]. Available options are: ["basic", "robust", "neural", "gradient_boost", "fast_boost"]. Also supports ensembling models.
+        models (Optional[str]): Model or list of models to use for prediction. Defaults to ["inait-basic"]. Available options are: ["inait-basic", "inait-advanced", "inait-best"].
 
     Returns:
         dict: The response from the API containing the prediction results and the session id.
     """
+    models = process_models(model)
 
     payload = create_payload_from_file(
         data=data,
@@ -208,13 +227,13 @@ def predict_test(
     observation_length: int,
     train_size: Optional[float] = None,
     test_size: Optional[int] = None,
-    model: Optional[str] = "Inait-basic",
+    model: Optional[str] = "inait-basic",
 ) -> dict[list[pd.DataFrame], list[str]]:
     """
     Trains a model using the target columns of given dataframe, and outputs a list of N predictions, with N being the number of test samples.
 
     Args:
-        base_url (str): The base URL of the Inait Forecasting API.
+        base_url (str): The base URL of the inait Forecasting API.
         auth_key (str): The authentication key for the API.
         data (pd.DataFrame): DataFrame containing the data.
         target_columns (list): List of target columns to predict.
@@ -222,7 +241,7 @@ def predict_test(
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
         train_size (float): Proportion of the dataset to include in the train split. If both train_size and test_size are not specified, train_size will be set to 0.8.
         test_size (int): Number of samples to include in the test split. If both train_size and test_size are not specified, test_size will be set to 0.2.
-        model str: Model to use for prediction. Defaults to "Inait-basic". Available options are: ["Inait-basic", "Inait-advanced", "Inait-best"].
+        model str: Model to use for prediction. Defaults to "inait-basic". Available options are: ["inait-basic", "inait-advanced", "inait-best"].
 
     Returns:
         dict[list[pd.DataFrame], list[str]]: A dictionary containing a list of DataFrames with predictions and a list of session IDs.
@@ -236,19 +255,15 @@ def predict_test(
     elif test_size is not None:
         start_test_index = len(data) - test_size - forecasting_horizon
     else:
-        start_test_index = int(len(data) * 0.8)
+        train_size = 0.8
+        start_test_index = int(len(data) * train_size)
 
-    if model == "Inait-basic":
-        models = ["basic"]
-    elif model == "Inait-advanced":
-        models = ["gradient_boost"]
-    elif model == "Inait-best":
-        models = ["robust", "fast_boost", "gradient_boost"]
 
     predictions = []
     session_ids = []
-    # TODO: allow for different strides
-    for t in tqdm(range(start_test_index, len(data) - forecasting_horizon)):
+
+    # TODO: allow for different strides; currently, we use stride = 1 and therefore predictions overlap when forecasting_horizon > 1.
+    for t in tqdm(range(start_test_index, len(data) - forecasting_horizon + 1)):
         results = predict(
             base_url=base_url,
             auth_key=auth_key,
@@ -256,7 +271,7 @@ def predict_test(
             target_columns=target_columns,
             forecasting_horizon=forecasting_horizon,
             observation_length=observation_length,
-            models=models,
+            model=model,
         )
         predictions.append(results["prediction"])
         session_ids.append(results["session_id"])

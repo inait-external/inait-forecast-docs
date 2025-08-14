@@ -110,9 +110,9 @@ def parse_arguments():
 
 def plot(
     historical_data: pd.DataFrame,
-    predicted_data: pd.DataFrame | dict[str, pd.DataFrame],
-    observation_length=None,
-    legend_title_predicted="Predicted",
+    predicted_data: Optional[pd.DataFrame | dict[str, pd.DataFrame]] = None,
+    observation_length: Optional[int] = None,
+    legend_title_predicted: Optional[str] = "Predicted",
 ):
     """
     Plots the actual vs predicted values.
@@ -127,45 +127,61 @@ def plot(
         plotly.graph_objects.Figure: The figure object containing the plot.
     """
     # Convert single DataFrame to dict format for consistent processing
+    if predicted_data is None:
+        predicted_data = {}
+
     if isinstance(predicted_data, pd.DataFrame):
         predicted_data = {legend_title_predicted: predicted_data}
 
     if type(historical_data) is pd.Series:
         historical_data = historical_data.to_frame()
 
-    # Get the first DataFrame to check structure and validate columns
-    first_df = next(iter(predicted_data.values()))
-    predicted_cols = first_df.columns[first_df.columns.str.endswith("_predicted")]
-    
-    if historical_data.shape[1] != len(predicted_cols):
-        raise ValueError(
-            "Historical data and predicted data must have the same number of columns. Consider passing only the target columns of historical_data."
-        )
 
-    # Check if any DataFrame has prediction intervals
-    has_intervals = any(
-        len(df.columns[df.columns.str.endswith("_predicted")]) != len(df.columns)
-        for df in predicted_data.values()
-    )
-    
-    level = None
-    if has_intervals:
-        # Get level from the first DataFrame that has intervals
-        for df in predicted_data.values():
-            non_predicted_cols = df.columns[~df.columns.str.endswith("_predicted")]
-            if len(non_predicted_cols) > 0:
-                level = non_predicted_cols[-1].split("-")[-1]
-                break
+
+    if len(predicted_data) > 0:
+        # Get the first DataFrame to check structure and validate columns
+        first_df = next(iter(predicted_data.values()))
+        predicted_cols = first_df.columns[first_df.columns.str.endswith("_predicted")]
+        
+        # Validate that historical data and predicted data have the same number of columns
+        if historical_data.shape[1] != len(predicted_cols) :
+            raise ValueError(
+                "Historical data and predicted data must have the same number of columns. Consider passing only the target columns of historical_data."
+            )
+        
+        # Check if any DataFrame has prediction intervals
+        has_intervals = any(
+            len(df.columns[df.columns.str.endswith("_predicted")]) != len(df.columns)
+            for df in predicted_data.values()
+        )
+        
+        level = None
+        if has_intervals:
+            # Get level from the first DataFrame that has intervals
+            for df in predicted_data.values():
+                non_predicted_cols = df.columns[~df.columns.str.endswith("_predicted")]
+                if len(non_predicted_cols) > 0:
+                    level = non_predicted_cols[-1].split("-")[-1]
+                    break
+    else:
+        predicted_cols = historical_data.columns
+        has_intervals = False
+        level = None
 
     if not observation_length:
         # Use the first DataFrame to determine observation length
-        observation_length = (
-            len(first_df) * 4
-            if len(first_df) * 4 < historical_data.shape[0]
-            else historical_data.shape[0]
-        )
+        if len(predicted_data) > 0:
+            observation_length = (
+                len(first_df) * 4
+                if len(first_df) * 4 < historical_data.shape[0]
+                else historical_data.shape[0]
+            )
+        else:
+            observation_length = historical_data.shape[0]
+
 
     historical_color = "#4682B4"  # Steel Blue
+    band_fill = "rgba(60,179,113,0.18)"  # 3CB371 with ~18% opacity
     
     # Generate colors programmatically
     def generate_prediction_color(index, total_count):
@@ -205,8 +221,6 @@ def plot(
         
         # Convert to hex
         return f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}"
-    
-    band_fill = "rgba(60,179,113,0.18)"  # 3CB371 with ~18% opacity
 
     nplots = len(predicted_cols)
     ncols = 1 if nplots == 1 else 2
@@ -222,7 +236,11 @@ def plot(
     for i, col in enumerate(historical_data.columns):
         row = i // ncols + 1
         col_pos = i % ncols + 1
+        width_line = 1 if len(predicted_data) > 0 else 2
+        width_line = 0.5 if has_intervals else width_line
+        print(len(predicted_data), has_intervals, width_line)
 
+        # Add historical trace
         fig.add_trace(
             go.Scatter(
                 x=historical_data.iloc[-observation_length:].index,
@@ -230,95 +248,96 @@ def plot(
                 mode="lines",
                 name="Historical",
                 showlegend=not hist_legend_added,
-                line=dict(color=historical_color),
+                line=dict(color=historical_color, width=width_line),
             ),
             row=row,
             col=col_pos,
         )
         hist_legend_added = True
 
-    # Predicted traces - loop through each DataFrame in the dict
-    total_predictions = len(predicted_data)
-    for pred_idx, (title, df_predicted) in enumerate(predicted_data.items()):
-        # Generate color for this predicted dataset
-        predicted_color = generate_prediction_color(pred_idx, total_predictions)
-        
-        pred_cols = df_predicted.columns[df_predicted.columns.str.endswith("_predicted")]
-        pred_legend_added = False
-        
-        # Add prediction intervals if they exist for this DataFrame
-        if has_intervals and len(df_predicted.columns) > len(pred_cols):
-            interval_cols = df_predicted.columns[~df_predicted.columns.str.endswith("_predicted")]
+    if len(predicted_data) > 0:
+        # Predicted traces - loop through each DataFrame in the dict
+        total_predictions = len(predicted_data)
+        for pred_idx, (title, df_predicted) in enumerate(predicted_data.items()):
+            # Generate color for this predicted dataset
+            predicted_color = generate_prediction_color(pred_idx, total_predictions)
             
+            pred_cols = df_predicted.columns[df_predicted.columns.str.endswith("_predicted")]
+            pred_legend_added = False
+            
+            # Add prediction intervals if they exist for this DataFrame
+            if has_intervals and len(df_predicted.columns) > len(pred_cols):
+                interval_cols = df_predicted.columns[~df_predicted.columns.str.endswith("_predicted")]
+                
+                for i, pred_col in enumerate(pred_cols):
+                    col_id = pred_col.split("_predicted")[0]
+                    row = i // ncols + 1
+                    col_pos = i % ncols + 1
+                    
+                    lo_col = f"{col_id}_predicted-lo-{level}"
+                    hi_col = f"{col_id}_predicted-hi-{level}"
+                    
+                    if lo_col in df_predicted.columns and hi_col in df_predicted.columns:
+                        # Add LO trace (invisible)
+                        fig.add_trace(
+                            go.Scatter(
+                                x=df_predicted.index,
+                                y=df_predicted[lo_col],
+                                mode="lines",
+                                line=dict(width=0),
+                                hoverinfo="skip",
+                                showlegend=False,
+                                legendgroup=f"pred_{title}",
+                            ),
+                            row=row,
+                            col=col_pos,
+                        )
+                        
+                        # Add HI trace with fill
+                        fig.add_trace(
+                            go.Scatter(
+                                x=df_predicted.index,
+                                y=df_predicted[hi_col],
+                                mode="lines",
+                                line=dict(width=0),
+                                fill="tonexty",
+                                fillcolor=band_fill,
+                                hoverinfo="skip",
+                                showlegend=not band_legend_added,
+                                legendgroup=f"pred_{title}",
+                                name=f"{level}% interval",
+                            ),
+                            row=row,
+                            col=col_pos,
+                        )
+                        band_legend_added = True
+
+            # Add predicted line traces
             for i, pred_col in enumerate(pred_cols):
-                col_id = pred_col.split("_predicted")[0]
                 row = i // ncols + 1
                 col_pos = i % ncols + 1
-                
-                lo_col = f"{col_id}_predicted-lo-{level}"
-                hi_col = f"{col_id}_predicted-hi-{level}"
-                
-                if lo_col in df_predicted.columns and hi_col in df_predicted.columns:
-                    # Add LO trace (invisible)
-                    fig.add_trace(
-                        go.Scatter(
-                            x=df_predicted.index,
-                            y=df_predicted[lo_col],
-                            mode="lines",
-                            line=dict(width=0),
-                            hoverinfo="skip",
-                            showlegend=False,
-                            legendgroup=f"pred_{title}",
-                        ),
-                        row=row,
-                        col=col_pos,
-                    )
-                    
-                    # Add HI trace with fill
-                    fig.add_trace(
-                        go.Scatter(
-                            x=df_predicted.index,
-                            y=df_predicted[hi_col],
-                            mode="lines",
-                            line=dict(width=0),
-                            fill="tonexty",
-                            fillcolor=band_fill,
-                            hoverinfo="skip",
-                            showlegend=not band_legend_added,
-                            legendgroup=f"pred_{title}",
-                            name=f"{level}% interval",
-                        ),
-                        row=row,
-                        col=col_pos,
-                    )
-                    band_legend_added = True
 
-        # Add predicted line traces
-        for i, pred_col in enumerate(pred_cols):
-            row = i // ncols + 1
-            col_pos = i % ncols + 1
-
-            fig.add_trace(
-                go.Scatter(
-                    x=df_predicted.index,
-                    y=df_predicted[pred_col],
-                    mode="markers+lines" if len(df_predicted) == 1 else "lines",
-                    name=title,
-                    showlegend=not pred_legend_added,
-                    line=dict(color=predicted_color),
-                    legendgroup=f"pred_{title}",
-                ),
-                row=row,
-                col=col_pos,
-            )
-            pred_legend_added = True
+                fig.add_trace(
+                    go.Scatter(
+                        x=df_predicted.index,
+                        y=df_predicted[pred_col],
+                        mode="markers+lines" if len(df_predicted) == 1 else "lines",
+                        name=title,
+                        showlegend=not pred_legend_added,
+                        line=dict(color=predicted_color),
+                        legendgroup=f"pred_{title}",
+                    ),
+                    row=row,
+                    col=col_pos,
+                )
+                pred_legend_added = True
 
     fig.update_xaxes(title_text="Date")
     fig.update_yaxes(title_text="")
     fig.update_layout(
         height=300 * nrows,
         width=900,
-        title_text="Historical vs Predicted",
+        title_text="Historical vs Predicted" if len(predicted_data) > 0 else "Historical Data",
         showlegend=True,
         plot_bgcolor="white",  # Plot area background
         paper_bgcolor="white",  # Outer background
