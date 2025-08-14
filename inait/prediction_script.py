@@ -263,7 +263,7 @@ def predict_test(
     session_ids = []
 
     # TODO: allow for different strides; currently, we use stride = 1 and therefore predictions overlap when forecasting_horizon > 1.
-    for t in tqdm(range(start_test_index, len(data) - forecasting_horizon + 1)):
+    for t in tqdm(range(start_test_index + 1, len(data) - forecasting_horizon + 1)):
         results = predict(
             base_url=base_url,
             auth_key=auth_key,
