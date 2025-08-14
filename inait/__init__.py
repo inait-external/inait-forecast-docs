@@ -11,6 +11,7 @@ from .prediction_script import (
     predict,
     predict_test,
     score_test,
+    check_coverage,
 )
 from .plot_script import create_plot_payload, plot_image, bytes_from_base64, plot
 from .explanation_script import explain, create_explanation_payload
@@ -33,4 +34,5 @@ __all__ = [
     "load_credentials",
     "predict_test",
     "score_test",
+    "check_coverage",
 ]
