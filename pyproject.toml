@@ -40,6 +40,7 @@ dependencies = [
     "tqdm>=4.67.1",
     "scikit-learn>=1.6.1",
     "tables>=3.9.2",
+    "jupyterlab-execute-time>=3.2.0",
 ]
 
 [project.optional-dependencies]
