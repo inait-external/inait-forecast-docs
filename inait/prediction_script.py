@@ -309,6 +309,50 @@ def score_test(
             score += mean_squared_error(_ground_truth, prediction)
     return score / len(predictions)
 
+def check_coverage(
+        historical_data: pd.DataFrame,
+        prediction_data: pd.DataFrame,
+        prediction_interval_level: int,
+):
+    """
+    Checks the coverage of the prediction intervals against the historical data.
+
+    Args:
+        historical_data (pd.DataFrame): The historical data.
+        prediction_data (pd.DataFrame): The prediction data with intervals.
+        prediction_interval_level (int): The prediction interval level (e.g., 80 for 80% interval).
+    """
+
+    # Ensure indices are aligned and datetime
+    historical_data = historical_data.copy()
+    prediction_data = prediction_data.copy()
+    historical_data.index = pd.to_datetime(historical_data.index)
+    prediction_data.index = pd.to_datetime(prediction_data.index)
+    idxs = historical_data.index.intersection(prediction_data.index)
+    columns = historical_data.columns.intersection([
+        col.replace(f"_predicted-lo-{prediction_interval_level}", "")
+        .replace(f"_predicted-hi-{prediction_interval_level}", "")
+        .replace("_predicted", "")
+        for col in prediction_data.columns if "_predicted" in col
+    ])
+
+    total_within = 0
+    total_count = 0
+    for col in columns:
+        actual = historical_data.loc[idxs, col]
+        lo_col = f"{col}_predicted-lo-{prediction_interval_level}"
+        hi_col = f"{col}_predicted-hi-{prediction_interval_level}"
+        if lo_col in prediction_data.columns and hi_col in prediction_data.columns:
+            lo = prediction_data.loc[idxs, lo_col]
+            hi = prediction_data.loc[idxs, hi_col]
+            within = (actual >= lo) & (actual <= hi)
+            total_within += within.sum()
+            total_count += within.count()
+    avg_percent = 100 * total_within / total_count if total_count > 0 else 0
+    print(
+    f"Coverage result: {total_within} out of {total_count} actual values "
+    f"({avg_percent:.1f}%) were inside the {prediction_interval_level}% prediction interval."
+)
 
 # Example usage
 if __name__ == "__main__":
