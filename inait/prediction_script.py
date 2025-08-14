@@ -143,11 +143,11 @@ def process_models(models: Optional[str] = None):
         models = [models]
     elif not isinstance(models, list):
         raise TypeError("models must be a string or None")
-    
+
     if models == ["inait-basic"]:
         models = ["basic"]
     elif models == ["inait-advanced"]:
-        models = ["basic","gradient_boost"]
+        models = ["basic", "gradient_boost"]
     elif models == ["inait-best"]:
         models = ["robust", "fast_boost", "gradient_boost"]
 
@@ -197,6 +197,7 @@ def predict(
     )
 
     # Send prediction request to the API
+    print("Sending prediction request...")
     response = make_request(base_url + "/prediction", payload, auth_key=auth_key)
 
     # Process the response and extract results
@@ -258,12 +259,14 @@ def predict_test(
         train_size = 0.8
         start_test_index = int(len(data) * train_size)
 
-
     predictions = []
     session_ids = []
 
     # TODO: allow for different strides; currently, we use stride = 1 and therefore predictions overlap when forecasting_horizon > 1.
-    for t in tqdm(range(start_test_index + 1, len(data) - forecasting_horizon + 1)):
+    for t in tqdm(
+        range(start_test_index + 1, len(data) - forecasting_horizon + 1),
+        postfix=f"Forecasting with {model}",
+    ):
         results = predict(
             base_url=base_url,
             auth_key=auth_key,
