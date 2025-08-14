@@ -236,7 +236,11 @@ def plot(
     for i, col in enumerate(historical_data.columns):
         row = i // ncols + 1
         col_pos = i % ncols + 1
+        width_line = 1 if len(predicted_data) > 0 else 2
+        width_line = 0.5 if has_intervals else width_line
+        print(len(predicted_data), has_intervals, width_line)
 
+        # Add historical trace
         fig.add_trace(
             go.Scatter(
                 x=historical_data.iloc[-observation_length:].index,
@@ -244,7 +248,7 @@ def plot(
                 mode="lines",
                 name="Historical",
                 showlegend=not hist_legend_added,
-                line=dict(color=historical_color),
+                line=dict(color=historical_color, width=width_line),
             ),
             row=row,
             col=col_pos,
