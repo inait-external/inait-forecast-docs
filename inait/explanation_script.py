@@ -81,6 +81,7 @@ def explain(
     )  # Default to the last date in the historical data
 
     payload = create_explanation_payload(session_id=session_id, cutoff_days=cutoff_date)
+    print("Sending explanation request...")
     explanation_response = make_request(
         base_url + "/explanation", payload, auth_key=auth_key
     )

@@ -197,6 +197,7 @@ def predict(
     )
 
     # Send prediction request to the API
+    print("Sending prediction request...")
     response = make_request(base_url + "/prediction", payload, auth_key=auth_key)
 
     # Process the response and extract results
