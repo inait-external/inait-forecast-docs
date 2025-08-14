@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 from typing import Optional
 from .utils import make_request, parse_common_arguments
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from sklearn.metrics import (
     mean_absolute_error,
     mean_squared_error,
@@ -165,6 +165,7 @@ def predict(
     feature_columns: Optional[list] = None,
     prediction_interval_levels: Optional[float] = None,
     model: Optional[str] = None,
+    verbose: Optional[bool] = True,
 ) -> dict[pd.DataFrame, str]:
     """
     Trains a model using the target columns of given dataframe, and outputs a single prediction of `forecasting_horizon` length.
@@ -178,6 +179,7 @@ def predict(
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
         models (Optional[str]): Model or list of models to use for prediction. Defaults to ["inait-basic"]. Available options are: ["inait-basic", "inait-advanced", "inait-best"].
+        verbose (bool): Whether to print logs during prediction.
 
     Returns:
         dict: The response from the API containing the prediction results and the session id.
@@ -206,7 +208,8 @@ def predict(
     )
 
     # Send prediction request to the API
-    print("Sending prediction request...")
+    if verbose:
+        print("Sending prediction request...")
     response = make_request(base_url + "/prediction", payload, auth_key=auth_key)
 
     # Process the response and extract results
@@ -251,7 +254,7 @@ def predict_test(
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
         train_size (float): Proportion of the dataset to include in the train split. If both train_size and test_size are not specified, train_size will be set to 0.8.
         test_size (int): Number of samples to include in the test split. If both train_size and test_size are not specified, test_size will be set to 0.2.
-        model str: Model to use for prediction. Defaults to "inait-basic". Available options are: ["inait-basic", "inait-advanced", "inait-best"].
+        model (str): Model to use for prediction. Defaults to "inait-basic". Available options are: ["inait-basic", "inait-advanced", "inait-best"].
 
     Returns:
         dict[list[pd.DataFrame], list[str]]: A dictionary containing a list of DataFrames with predictions and a list of session IDs.
@@ -284,6 +287,7 @@ def predict_test(
             forecasting_horizon=forecasting_horizon,
             observation_length=observation_length,
             model=model,
+            verbose=False,
         )
         predictions.append(results["prediction"])
         session_ids.append(results["session_id"])
