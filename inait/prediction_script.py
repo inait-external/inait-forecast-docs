@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 from typing import Optional
 from .utils import make_request, parse_common_arguments
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from sklearn.metrics import (
     mean_absolute_error,
     mean_squared_error,
