@@ -1,9 +1,17 @@
 {
-  "name": "inait-forecast-docs",
-  "image": "mcr.microsoft.com/devcontainers/python:3.11",
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {}
+  "name": "marketplace-examples",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+  "features": { "ghcr.io/devcontainers/features/common-utils:2": {} },
+  "postCreateCommand": "bash -lc 'set -euxo pipefail; export PATH=$HOME/.local/bin:$PATH; curl -LsSf https://astral.sh/uv/install.sh | sh; uv --version; make init || uv sync; uv run python -m ipykernel install --user --name inait-uv --display-name \"Python (inait-uv)\"'",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "python.terminal.activateEnvironment": true,
+        "jupyter.notebookFileRoot": "${workspaceFolder}"
+      },
+      "extensions": ["ms-python.python", "ms-toolsai.jupyter"]
+    }
   },
-  "postCreateCommand": "bash -lc 'set -euxo pipefail; export PATH=$HOME/.local/bin:$PATH; cd inait-predict-examples; curl -LsSf https://astral.sh/uv/install.sh | sh; chmod +x ./setup.sh; ./setup.sh || true; ./setup.sh'",
   "remoteUser": "vscode"
 }
