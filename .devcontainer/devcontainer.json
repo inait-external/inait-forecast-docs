@@ -1,5 +1,5 @@
 {
-  "name": "marketplace-examples",
+  "name": "inait-forecast-docs",
   "image": "mcr.microsoft.com/devcontainers/python:3.13",
   "features": { "ghcr.io/devcontainers/features/common-utils:2": {} },
   "postCreateCommand": "bash -lc 'set -euxo pipefail; export PATH=$HOME/.local/bin:$PATH; curl -LsSf https://astral.sh/uv/install.sh | sh; uv --version; make init || uv sync; uv run python -m ipykernel install --user --name inait-uv --display-name \"Python (inait-uv)\"'",
