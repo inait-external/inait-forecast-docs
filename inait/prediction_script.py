@@ -177,7 +177,7 @@ def predict(
         feature_columns (Optional[list]): List of feature columns to use for prediction.
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
-        models (Optional[str]): Model or list of models to use for prediction. Defaults to ["inait-basic"]. Available options are: ["inait-basic", "inait-advance", "inait-best"].
+        models (Optional[str]): Model or list of models to use for prediction. Defaults to ["inait-basic"]. Available options are: ["inait-basic", "inait-advanced", "inait-best"].
 
     Returns:
         dict: The response from the API containing the prediction results and the session id.
