@@ -182,6 +182,15 @@ def predict(
     Returns:
         dict: The response from the API containing the prediction results and the session id.
     """
+    if observation_length <= 0:
+        raise ValueError("observation_length must be greater than 0")
+    if forecasting_horizon <= 0:
+        raise ValueError("forecasting_horizon must be greater than 0")
+    if observation_length > len(data):
+        raise ValueError(
+            "observation_length must be less than or equal to the length of the data"
+        )
+
     models = process_models(model)
 
     payload = create_payload_from_file(
