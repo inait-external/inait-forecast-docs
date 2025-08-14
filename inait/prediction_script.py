@@ -248,7 +248,10 @@ def predict_test(
     predictions = []
     session_ids = []
     # TODO: allow for different strides
-    for t in tqdm(range(start_test_index, len(data) - forecasting_horizon)):
+    for t in tqdm(
+        range(start_test_index, len(data) - forecasting_horizon),
+        postfix=f"Forecasting with {model}",
+    ):
         results = predict(
             base_url=base_url,
             auth_key=auth_key,
