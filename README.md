@@ -32,8 +32,8 @@ API_AUTH_KEY='<your-api-key>'
 
 ## Video tutorials (get clarity about 2 min)
 
-* [Notebooks: Set Credentials and Run](https://vimeo.com/1110294635/fb1f373c02) ( < 80 sec )
-* [Notebooks: Add new data and tailor the code](https://vimeo.com/1110308096/6b93267578) ( < 60 sec )
+* [Notebooks: Set Credentials and Run](https://vimeo.com/1110294635/fb1f373c02) ( 80 sec )
+* [Notebooks: Add new data and tailor the code](https://vimeo.com/1110308096/6b93267578) ( 60 sec )
 
 ![videos](./assets/vimeo-shots.png)
 
