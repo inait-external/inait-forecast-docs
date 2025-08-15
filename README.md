@@ -2,7 +2,7 @@
 # Inait Forecasting – Examples & Notebooks
 
 This README is **only** about running the examples (notebooks + helper utilities).  
-For Azure purchasing/deployment of the Managed App, see **[package-README.md](./package-README.md)**.
+For Azure purchasing/deployment of the Managed App, see **[package-README](./package-README.md)**.
 
 > New to inait Forecasting? See **[Why Choose inait Forecasting](./package-README.md#why-choose-inait-forecasting)** for a quick overview of models, ensembles, explainability, and industry use cases.
 
@@ -69,7 +69,7 @@ API_BASE_URL="https://<your-forecast-endpoint>"
 API_AUTH_KEY="<your-api-key>"
 ```
 
-> Don’t have an endpoint yet? See **[package-README.md](./package-README.md)** to deploy the Managed App and obtain credentials.
+> Don’t have an endpoint yet? See **[package-README](./package-README.md)** to deploy the Managed App and obtain credentials.
 
 ---
 
@@ -124,4 +124,4 @@ uv run python -m inait.explanation_script --help
 - **Email**: contact@inait.ai
 
 
-**Next:** Azure purchase & deployment → **[package-README.md](./package-README.md)**
+**Next:** Azure purchase & deployment → **[package-README](./package-README.md)**
