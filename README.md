@@ -1,14 +1,13 @@
 
 # Inait Forecasting – Examples & Notebooks
 
-This README is **only** about running the examples (notebooks + helper utilities).  
-For Azure purchasing/deployment of the Managed App, see **[package-README](./package-README.md)**.
+This README is **only** about running the examples (notebooks + helper utilities). For Azure purchasing/deployment of the Managed App, see **[package-README](./package-README.md)**.
 
 > New to inait Forecasting? See **[Why Choose inait Forecasting](./package-README.md#why-choose-inait-forecasting)** for a quick overview of models, ensembles, explainability, and industry use cases.
 
 ---
 
-# One‑click: run the notebooks
+# One‑click: Run the Notebooks
 
 ## Binder (no local install)
 Click the first **Binder badge** below to **run directly on your browser**.
@@ -17,6 +16,7 @@ First launch of updated version of the code may take a few minutes while the ima
 ### Stable Version (Prod)
 
 [![run Stable Version on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/prod)
+
 #### Latest Version (Unstable)
 
 [![run HEAD on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
@@ -30,9 +30,20 @@ API_BASE_URL='https://<your-forecast-endpoint>'
 API_AUTH_KEY='<your-api-key>'
 ```
 
+**Note:** If it's the first time you run Jupyter notebooks, you can click on **"Run"** at the top menu and select **"Run All Cells"**.
+
+## Video tutorials (get clarity about 2 min)
+
+* [Notebooks: Set Credentials and Run](https://vimeo.com/1110294635/fb1f373c02) ( < 80 sec )
+* [Notebooks: Add new data and tailor the code](https://vimeo.com/1110308096/6b93267578) ( < 60 sec )
+
+![Benchmark ETTh1](./assets/vimeo-shots.png)
+
+
 ----
 
 ## GitHub Codespaces
+
 Click the Codespaces badge. On first start, the dev container installs `uv`, runs `make init` to create `.venv`, and registers the **Python (inait‑uv)** kernel. Open `notebook-examples/` and start any notebook.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/inait-external/inait-forecast-docs?quickstart=1)
@@ -40,6 +51,7 @@ Click the Codespaces badge. On first start, the dev container installs `uv`, run
 ----
 
 ## Local (uv)
+
 ```bash
 # 1) Install uv (Linux/macOS)
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -96,6 +108,7 @@ Small CSVs live in `data/`:
 - `data/power_day_ahead.csv` – German day-ahead hourly electricity prices, including exogenous factors
 
 **Expected format** (simplified):
+
 - A timestamp column with consistent frequency (hourly, daily, …)  
 - One or multiple numeric columns: one or more target columns to forecast and optional exogenous variables all aligned to the same timestamps
 
