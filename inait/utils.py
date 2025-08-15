@@ -5,6 +5,7 @@ from typing import Optional
 from dotenv import load_dotenv
 import pandas as pd
 from pathlib import Path
+from functools import wraps, lru_cache
 
 
 def load_credentials(path: str) -> tuple[str, str]:
@@ -19,6 +20,90 @@ def load_credentials(path: str) -> tuple[str, str]:
         )
 
     return base_url, auth_key
+
+
+@lru_cache(maxsize=1)
+def auto_load_credentials() -> tuple[str, str]:
+    """
+    Automatically load credentials from multiple possible locations.
+    Tries in order:
+    1. Environment variables (API_BASE_URL, API_AUTH_KEY)
+    2. ../credentials.txt (relative to current working directory)
+    3. ./credentials.txt (in current working directory)
+
+    Returns:
+        tuple[str, str]: base_url and auth_key
+
+    Raises:
+        ValueError: If credentials cannot be found in any location
+    """
+    # First try environment variables
+    base_url = os.environ.get("API_BASE_URL", "").strip()
+    auth_key = os.environ.get("API_AUTH_KEY", "").strip()
+
+    if base_url and auth_key:
+        return base_url, auth_key
+
+    # Try loading from standard locations
+    credential_paths = [
+        "../credentials.txt",  # Parent directory (common for notebooks)
+        "./credentials.txt",  # Current directory
+        "credentials.txt",  # Current directory without ./
+    ]
+
+    for path in credential_paths:
+        if os.path.exists(path):
+            try:
+                load_dotenv(path)
+                base_url = os.environ.get("API_BASE_URL", "").strip()
+                auth_key = os.environ.get("API_AUTH_KEY", "").strip()
+
+                if base_url and auth_key:
+                    return base_url, auth_key
+            except Exception:
+                continue
+
+    raise ValueError(
+        "❌ Could not find credentials. Please set API_BASE_URL and API_AUTH_KEY "
+        "either as environment variables or in credentials.txt file."
+    )
+
+
+def with_credentials(func):
+    """
+    Decorator that automatically injects credentials if not provided.
+
+    If base_url or auth_key are None, attempts to load them automatically
+    from standard locations (environment variables or credentials.txt files).
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # Check if base_url and auth_key are in kwargs
+        base_url = kwargs.get("base_url")
+        auth_key = kwargs.get("auth_key")
+
+        # If either is None or not provided, auto-load credentials
+        if base_url is None or auth_key is None:
+            try:
+                auto_base_url, auto_auth_key = auto_load_credentials()
+                if base_url is None:
+                    kwargs["base_url"] = auto_base_url
+                if auth_key is None:
+                    kwargs["auth_key"] = auto_auth_key
+            except ValueError as e:
+                # Only raise if credentials were truly not provided
+                if base_url is None and auth_key is None:
+                    raise e
+                elif base_url is None or auth_key is None:
+                    raise ValueError(
+                        "Both base_url and auth_key must be provided, or neither "
+                        "(to use auto-loading)."
+                    )
+
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def make_request(url: str, payload: dict, auth_key: Optional[str] = None):

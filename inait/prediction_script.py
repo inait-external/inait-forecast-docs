@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 from typing import Optional
-from .utils import make_request, parse_common_arguments
+from .utils import make_request, parse_common_arguments, with_credentials
 from tqdm.auto import tqdm
 from sklearn.metrics import (
     mean_absolute_error,
@@ -40,7 +40,7 @@ def create_payload_from_file(
     target_columns: str,
     forecasting_horizon: int,
     observation_length: int,
-    feature_columns: Optional[str] = None,
+    explanatory_columns: Optional[str] = None,
     models: str = "basic",
     prediction_interval_levels: Optional[str] = None,
     background: bool = False,
@@ -51,7 +51,7 @@ def create_payload_from_file(
     Args:
         data (pd.DataFrame): DataFrame containing the input data.
         target_columns (str): Comma-separated string of column names to predict.
-        feature_columns (Optional[str]): Comma-separated string of feature column names.
+        explanatory_columns (Optional[str]): Comma-separated string of explanatory column names.
         models (str): Comma-separated list of models to use.
         prediction_interval_levels (Optional[str]): Comma-separated list of prediction interval levels.
         forecasting_horizon (int): Forecasting horizon.
@@ -71,7 +71,7 @@ def create_payload_from_file(
                 "observation_length": observation_length,
                 "targets": target_columns,
                 "dataset": None,
-                "features": feature_columns,
+                "features": explanatory_columns,
                 "prediction_interval_levels": prediction_interval_levels,
                 "forecaster": models,
             },
@@ -154,32 +154,33 @@ def process_models(models: Optional[str] = None):
     return models
 
 
+@with_credentials
 def predict(
-    base_url: str,
-    auth_key: str,
     data: pd.DataFrame,
     forecasting_horizon: int,
     observation_length: int,
     target_columns: list[str] | str,
     positive_predictions_only: bool = False,
-    feature_columns: Optional[list] = None,
+    explanatory_columns: Optional[list] = None,
     prediction_interval_levels: Optional[float] = None,
     model: Optional[str] = None,
     verbose: Optional[bool] = True,
+    base_url: Optional[str] = None,
+    auth_key: Optional[str] = None,
 ) -> dict[pd.DataFrame, str]:
     """
     Trains a model using the target columns of given dataframe, and outputs a single prediction of `forecasting_horizon` length.
 
     Args:
-        base_url (str): The base URL of the inait Forecasting API.
-        auth_key (str): The authentication key for the API.
         data (pd.DataFrame): DataFrame containing the data.
         target_columns (list): List of target columns to predict.
-        feature_columns (Optional[list]): List of feature columns to use for prediction.
+        explanatory_columns (Optional[list]): List of explanatory columns to use for prediction.
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
         models (Optional[str]): Model or list of models to use for prediction. Defaults to ["inait-basic"]. Available options are: ["inait-basic", "inait-advanced", "inait-best"].
         verbose (bool): Whether to print logs during prediction.
+        base_url (Optional[str]): The base URL of the inait Forecasting API. If not provided, will be auto-loaded from credentials.
+        auth_key (Optional[str]): The authentication key for the API. If not provided, will be auto-loaded from credentials.
 
     Returns:
         dict: The response from the API containing the prediction results and the session id.
@@ -200,7 +201,9 @@ def predict(
         target_columns=",".join(target_columns),
         forecasting_horizon=forecasting_horizon,
         observation_length=observation_length,
-        feature_columns=",".join(feature_columns) if feature_columns else None,
+        explanatory_columns=",".join(explanatory_columns)
+        if explanatory_columns
+        else None,
         models=",".join(models),
         prediction_interval_levels=str(prediction_interval_levels)
         if prediction_interval_levels
@@ -231,9 +234,8 @@ def predict(
     return dict(prediction=df_wide, session_id=session_id)
 
 
+@with_credentials
 def predict_test(
-    base_url: str,
-    auth_key: str,
     data: pd.DataFrame,
     target_columns: list,
     forecasting_horizon: int,
@@ -241,13 +243,13 @@ def predict_test(
     train_size: Optional[float] = None,
     test_size: Optional[int] = None,
     model: Optional[str] = "inait-basic",
+    base_url: Optional[str] = None,
+    auth_key: Optional[str] = None,
 ) -> dict[list[pd.DataFrame], list[str]]:
     """
     Trains a model using the target columns of given dataframe, and outputs a list of N predictions, with N being the number of test samples.
 
     Args:
-        base_url (str): The base URL of the inait Forecasting API.
-        auth_key (str): The authentication key for the API.
         data (pd.DataFrame): DataFrame containing the data.
         target_columns (list): List of target columns to predict.
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
@@ -255,6 +257,8 @@ def predict_test(
         train_size (float): Proportion of the dataset to include in the train split. If both train_size and test_size are not specified, train_size will be set to 0.8.
         test_size (int): Number of samples to include in the test split. If both train_size and test_size are not specified, test_size will be set to 0.2.
         model (str): Model to use for prediction. Defaults to "inait-basic". Available options are: ["inait-basic", "inait-advanced", "inait-best"].
+        base_url (Optional[str]): The base URL of the inait Forecasting API. If not provided, will be auto-loaded from credentials.
+        auth_key (Optional[str]): The authentication key for the API. If not provided, will be auto-loaded from credentials.
 
     Returns:
         dict[list[pd.DataFrame], list[str]]: A dictionary containing a list of DataFrames with predictions and a list of session IDs.
@@ -280,14 +284,14 @@ def predict_test(
         postfix=f"Forecasting with {model}",
     ):
         results = predict(
-            base_url=base_url,
-            auth_key=auth_key,
             data=data.iloc[:t],
             target_columns=target_columns,
             forecasting_horizon=forecasting_horizon,
             observation_length=observation_length,
             model=model,
             verbose=False,
+            base_url=base_url,
+            auth_key=auth_key,
         )
         predictions.append(results["prediction"])
         session_ids.append(results["session_id"])
@@ -386,7 +390,7 @@ if __name__ == "__main__":
             args.target_columns,
             args.forecasting_horizon,
             args.observation_length,
-            args.feature_columns,
+            args.explanatory_columns,
             args.models,
             args.prediction_interval_levels,
             args.background,
