@@ -133,8 +133,8 @@ def explain(
     )
 
     fig.update_layout(
-        xaxis_title="Impact of each feature on the prediction",
-        yaxis_title="Features",
+        xaxis_title="Impact of each driver on the prediction",
+        yaxis_title="Drivers",
         coloraxis_showscale=False,
         height=max(
             400, len(explanation) * 25
