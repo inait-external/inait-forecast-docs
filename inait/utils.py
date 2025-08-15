@@ -3,6 +3,8 @@ import argparse
 import os
 from typing import Optional
 from dotenv import load_dotenv
+import pandas as pd
+from pathlib import Path
 
 
 def load_credentials(path: str) -> tuple[str, str]:
@@ -39,8 +41,14 @@ def make_request(url: str, payload: dict, auth_key: Optional[str] = None):
         headers["Authorization"] = f"Bearer {auth_key}"
 
     response = requests.post(url, json=payload, headers=headers)
-    if response.status_code not in {200, 202}:
-        raise Exception(f"Error: {response.status_code}, {response.text}")
+
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        raise Exception(
+            f"Request failed: {response.status_code}, {response.text}"
+        ) from e
+
     response = response.json()
     return response
 
@@ -69,10 +77,12 @@ def make_get_request(
     else:
         status_response = requests.get(url, headers=headers)
 
-    if status_response.status_code != 200:
+    try:
+        status_response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
         raise Exception(
             f"Status check failed for url {url}: {status_response.status_code}, {status_response.text}"
-        )
+        ) from e
     return status_response.json()
 
 
@@ -97,3 +107,111 @@ def parse_common_arguments():
         help="Authentication key for the server (default: FINCHAT_AUTH_KEY environment variable).",
     )
     return parser
+
+
+def read_file(filepath: str, file_type: Optional[str] = None, **kwargs) -> pd.DataFrame:
+    """
+    Load a file as a pandas DataFrame based on its extension or specified type.
+
+    Supports loading from local files and HTTPS URLs.
+
+    Args:
+        filepath (str): Path to the file (local or HTTPS URL).
+        file_type (Optional[str]): Force a specific file type reader.
+                                  Options: 'csv', 'excel', 'json', 'parquet',
+                                  'hdf'/'h5', 'pickle'/'pkl'
+        **kwargs: Additional arguments passed to the pandas reader function.
+
+    Returns:
+        pd.DataFrame: Loaded dataframe with columns sorted alphabetically.
+
+    Raises:
+        ValueError: If file type or extension is not supported.
+        Exception: If file loading fails.
+
+    Examples:
+        # Load CSV file
+        df = read_file("data.csv")
+
+        # Load CSV with index column (common pandas parameter)
+        df = read_file("data.csv", index_col=0)
+
+        # Load Excel file with specific sheet
+        df = read_file("data.xlsx", sheet_name="Sheet2")
+
+        # Load from HTTPS URL
+        df = read_file("https://example.com/data.csv")
+
+        # Force .dat file to be read as CSV
+        df = read_file("custom.dat", file_type="csv")
+
+        # Force specific reader with additional parameters
+        df = read_file("data.txt", file_type="csv", delimiter="\t")
+    """
+    # Map file types to pandas reader functions
+    type_readers = {
+        "csv": pd.read_csv,
+        "excel": pd.read_excel,
+        "json": pd.read_json,
+        "parquet": pd.read_parquet,
+        "hdf": pd.read_hdf,
+        "h5": pd.read_hdf,
+        "pickle": pd.read_pickle,
+        "pkl": pd.read_pickle,
+    }
+
+    # If file_type is specified, use it
+    if file_type:
+        file_type_lower = file_type.lower()
+        if file_type_lower not in type_readers:
+            raise ValueError(
+                f"Unsupported file type: '{file_type}'. "
+                f"Supported types: {', '.join(sorted(set(type_readers.keys())))}"
+            )
+        reader = type_readers[file_type_lower]
+        try:
+            data = reader(filepath, **kwargs)
+            # Sort columns alphabetically
+            data = data[sorted(data.columns)]
+            return data
+        except Exception as e:
+            raise Exception(f"Failed to load file as {file_type}: {e}") from e
+
+    # Determine file extension
+    if filepath.startswith(("http://", "https://")):
+        # For URLs, extract extension from the path
+        path = Path(filepath.split("?")[0])  # Remove query parameters if any
+    else:
+        path = Path(filepath)
+
+    extension = path.suffix.lower()
+
+    # Map extensions to pandas reader functions
+    readers = {
+        ".csv": pd.read_csv,
+        ".xlsx": pd.read_excel,
+        ".xls": pd.read_excel,
+        ".json": pd.read_json,
+        ".parquet": pd.read_parquet,
+        ".h5": pd.read_hdf,
+        ".hdf5": pd.read_hdf,
+        ".pkl": pd.read_pickle,
+        ".pickle": pd.read_pickle,
+    }
+
+    if extension not in readers:
+        raise ValueError(
+            f"Unsupported file extension: {extension}. "
+            f"Supported extensions: {', '.join(readers.keys())}. "
+            f"Use file_type parameter to force a specific reader."
+        )
+
+    reader = readers[extension]
+
+    try:
+        data = reader(filepath, **kwargs)
+        # Sort columns alphabetically
+        data = data[sorted(data.columns)]
+        return data
+    except Exception as e:
+        raise Exception(f"Failed to load {extension} file: {e}") from e

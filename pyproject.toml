@@ -41,6 +41,7 @@ dependencies = [
     "scikit-learn>=1.6.1",
     "tables>=3.9.2",
     "jupyterlab-execute-time>=3.2.0",
+    "openpyxl>=3.0.0",
 ]
 
 [project.optional-dependencies]
