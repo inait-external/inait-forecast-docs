@@ -80,7 +80,7 @@ Run top‑to‑bottom:
 | Notebook | What it shows |
 |---|---|
 | `notebook-examples/0_quickstart.ipynb` | Start here. Configure credentials, submit your first forecast, and visualize results. |
-| `notebook-examples/1_advanced_model_evaluation.ipynb` | Compare various versions of inait forecasting models against open-source baselines on the ETTH1 electricity transformer dataset. |
+| `notebook-examples/1_advanced_model_evaluation.ipynb` | Compare various versions of inait forecasting models against open-source baselines on the ETTh1 electricity transformer dataset. |
 | `notebook-examples/2_energy_forecast_interpretability.ipynb` | Use inait explainability feature to understand which factors drive energy price predictions. |
 | `notebook-examples/3_sales_forecast_with_uncertainty.ipynb` | Sales forecasting with prediction intervals (uncertainty bands). |
 
