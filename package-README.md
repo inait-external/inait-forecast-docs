@@ -80,7 +80,7 @@ Then open **`notebook-examples/0_quickstart.ipynb`**, run the validation cell, a
 
 ## Example results
 
-![Benchmark ETTh1](./assets/example-result.png)
+![Benchmark ETTh1](./assets/example-result-nb1.png)
 
 ---
 
