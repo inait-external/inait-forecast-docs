@@ -1,12 +1,3 @@
-## Stable Version (Prod)
-
-[![run Stable Version on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/prod_branch) 
-
-### Latest Version (Unstable)
-
-[![run HEAD on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
-
-----
 
 # Inait Forecasting – Examples & Notebooks
 
@@ -17,17 +8,36 @@ For Azure purchasing/deployment of the Managed App, see **[package-README.md](./
 
 ---
 
-## One‑click: run the notebooks
+# One‑click: run the notebooks
 
-### Binder (no local install)
-Click the Binder badge above. It opens JupyterLab in `notebook-examples/`.  
-> First launch per commit may take a few minutes while the image builds.
+## Binder (no local install)
+Click the first **MyBinder badge** below. First launch per commit may take a few minutes while the image builds.
+
+### Stable Version (Prod)
+
+[![run Stable Version on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/prod_branch) 
+
+#### Latest Version (Unstable)
+
+[![run HEAD on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
+
+### Configure API access
+
+**A) `credentials.txt` (default used by notebooks)**  
+Create/edit a `credentials.txt` at the repo root:
+```bash
+API_BASE_URL='https://<your-forecast-endpoint>'
+API_AUTH_KEY='<your-api-key>'
+```
+
+----
 
 ### GitHub Codespaces
 Click the Codespaces badge. On first start, the dev container installs `uv`, runs `make init` to create `.venv`, and registers the **Python (inait‑uv)** kernel. Open `notebook-examples/` and start any notebook.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/inait-external/inait-forecast-docs?quickstart=1)
 
+----
 
 ### Local (uv)
 ```bash
