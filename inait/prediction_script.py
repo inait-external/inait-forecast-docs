@@ -40,7 +40,7 @@ def create_payload_from_file(
     target_columns: str,
     forecasting_horizon: int,
     observation_length: int,
-    feature_columns: Optional[str] = None,
+    explanatory_columns: Optional[str] = None,
     models: str = "basic",
     prediction_interval_levels: Optional[str] = None,
     background: bool = False,
@@ -51,7 +51,7 @@ def create_payload_from_file(
     Args:
         data (pd.DataFrame): DataFrame containing the input data.
         target_columns (str): Comma-separated string of column names to predict.
-        feature_columns (Optional[str]): Comma-separated string of feature column names.
+        explanatory_columns (Optional[str]): Comma-separated string of explanatory column names.
         models (str): Comma-separated list of models to use.
         prediction_interval_levels (Optional[str]): Comma-separated list of prediction interval levels.
         forecasting_horizon (int): Forecasting horizon.
@@ -71,7 +71,7 @@ def create_payload_from_file(
                 "observation_length": observation_length,
                 "targets": target_columns,
                 "dataset": None,
-                "features": feature_columns,
+                "features": explanatory_columns,
                 "prediction_interval_levels": prediction_interval_levels,
                 "forecaster": models,
             },
@@ -161,7 +161,7 @@ def predict(
     observation_length: int,
     target_columns: list[str] | str,
     positive_predictions_only: bool = False,
-    feature_columns: Optional[list] = None,
+    explanatory_columns: Optional[list] = None,
     prediction_interval_levels: Optional[float] = None,
     model: Optional[str] = None,
     verbose: Optional[bool] = True,
@@ -174,7 +174,7 @@ def predict(
     Args:
         data (pd.DataFrame): DataFrame containing the data.
         target_columns (list): List of target columns to predict.
-        feature_columns (Optional[list]): List of feature columns to use for prediction.
+        explanatory_columns (Optional[list]): List of explanatory columns to use for prediction.
         forecasting_horizon (int): Forecasting horizon, i.e. number of steps ahead to predict.
         observation_length (int): Observation length, i.e. number of past steps to consider when making a single prediction.
         models (Optional[str]): Model or list of models to use for prediction. Defaults to ["inait-basic"]. Available options are: ["inait-basic", "inait-advanced", "inait-best"].
@@ -201,7 +201,9 @@ def predict(
         target_columns=",".join(target_columns),
         forecasting_horizon=forecasting_horizon,
         observation_length=observation_length,
-        feature_columns=",".join(feature_columns) if feature_columns else None,
+        explanatory_columns=",".join(explanatory_columns)
+        if explanatory_columns
+        else None,
         models=",".join(models),
         prediction_interval_levels=str(prediction_interval_levels)
         if prediction_interval_levels
@@ -388,7 +390,7 @@ if __name__ == "__main__":
             args.target_columns,
             args.forecasting_horizon,
             args.observation_length,
-            args.feature_columns,
+            args.explanatory_columns,
             args.models,
             args.prediction_interval_levels,
             args.background,
