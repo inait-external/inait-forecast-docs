@@ -42,6 +42,7 @@ dependencies = [
     "tables>=3.9.2",
     "jupyterlab-execute-time>=3.2.0",
     "openpyxl>=3.0.0",
+    "pyarrow>=21.0.0",
 ]
 
 [project.optional-dependencies]
