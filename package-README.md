@@ -85,7 +85,7 @@ Then open **`notebook-examples/0_quickstart.ipynb`**, run the validation cell, a
 ---
 
 ## Data format requirements
-- UTF‑8 CSV with header row, Excel files, parquet, others. 
+- UTF-8 CSV with header row, Excel files, parquet, others. 
 - Please, see function `read_file` in utils.  
 
 Example:
