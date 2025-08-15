@@ -10,9 +10,9 @@ For Azure purchasing/deployment of the Managed App, see **[package-README.md](./
 
 # One‑click: run the notebooks
 
-## MyBinder (no local install)
-Click the first **MyBinder badge** below to **run directly on your browser**.
-First launch per commit may take a few minutes while the image builds.
+## Binder (no local install)
+Click the first **Binder badge** below to **run directly on your browser**.
+First launch of updated version of the code may take a few minutes while the image builds.
 
 ### Stable Version (Prod)
 
@@ -32,14 +32,14 @@ API_AUTH_KEY='<your-api-key>'
 
 ----
 
-### GitHub Codespaces
+## GitHub Codespaces
 Click the Codespaces badge. On first start, the dev container installs `uv`, runs `make init` to create `.venv`, and registers the **Python (inait‑uv)** kernel. Open `notebook-examples/` and start any notebook.
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/inait-external/inait-forecast-docs?quickstart=1)
 
 ----
 
-### Local (uv)
+## Local (uv)
 ```bash
 # 1) Install uv (Linux/macOS)
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -73,16 +73,16 @@ API_AUTH_KEY="<your-api-key>"
 
 ---
 
-## Notebook catalog
+# Notebook catalog
 
 Run top‑to‑bottom:
 
 | Notebook | What it shows |
 |---|---|
-| `notebook-examples/0_quickstart.ipynb` | **Start here.** Configure credentials, submit your first forecast, and visualize results. |
-| `notebook-examples/1_advanced_model_evaluation.ipynb` | Advanced models and evaluation on ETTh1‑style data; compare approaches. |
-| `notebook-examples/2_energy_forecast_interpretability.ipynb` | **Explainability** for energy datasets: feature attributions and insights. |
-| `notebook-examples/3_sales_forecast_with_uncertainty.ipynb` | Sales forecasting with **prediction intervals** (uncertainty bands). |
+| `notebook-examples/0_quickstart.ipynb` | Start here. Configure credentials, submit your first forecast, and visualize results. |
+| `notebook-examples/1_advanced_model_evaluation.ipynb` | Compare various versions of inait forecasting models against open-source baselines on the ETTH1 electricity transformer dataset. |
+| `notebook-examples/2_energy_forecast_interpretability.ipynb` | Use inait explainability feature to understand which factors drive energy price predictions. |
+| `notebook-examples/3_sales_forecast_with_uncertainty.ipynb` | Sales forecasting with prediction intervals (uncertainty bands). |
 
 ---
 
@@ -91,18 +91,17 @@ Run top‑to‑bottom:
 Small CSVs live in `data/`:
 
 - `data/airline.csv` – classic monthly airline passengers  
-- `data/etth1.csv` / `data/etth1_small.csv` – ETTh1‑like energy data (full & small)  
-- `data/M5_store_CA_1.csv` – single‑store sample in the M5 style  
-- `data/power_day_ahead.csv` – dayahead power demand/prices style
+- `data/etth1.csv` / `data/etth1_small.csv` – ETTh1 energy transformer dataset (full and small)  
+- `data/M5_store_CA_1.csv` – M5 competition dataset (single-store sales sample)  
+- `data/power_day_ahead.csv` – German day-ahead hourly electricity prices, including exogenous factors
 
 **Expected format** (simplified):
 - A timestamp column with consistent frequency (hourly, daily, …)  
-- A numeric target column to forecast  
-- Optional exogenous feature columns aligned to the same timestamps
+- One or multiple numeric columns: one or more target columns to forecast and optional exogenous variables all aligned to the same timestamps
 
 ---
 
-## Optional: Python helpers & CLI
+# Optional: Python helpers & CLI
 
 Lightweight utilities live under `inait/`:
 
@@ -115,11 +114,14 @@ uv run python -m inait.explanation_script --help
 
 ---
 
-## Troubleshooting
+# Troubleshooting
 
 - **Kernel mismatch (Codespaces)**: ensure the notebook kernel is **Python (inait‑uv)**.  
 - **Import errors in terminal**: `uv sync && source .venv/bin/activate`.  
 - **Auth errors (401/403)**: check `API_AUTH_KEY` and tenant for your endpoint.  
 - **Background jobs**: some examples poll until completion—keep the cell running.
+- **Issues**: https://github.com/inait-external/inait-forecast-docs/issues
+- **Email**: contact@inait.ai
+
 
 **Next:** Azure purchase & deployment → **[package-README.md](./package-README.md)**

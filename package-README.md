@@ -3,7 +3,7 @@
 # Inait Forecasting on Azure Marketplace – Buy, Deploy, Connect
 
 This guide explains **how to acquire and deploy** the inait Forecasting **Managed Application** in your Azure tenant and then connect it to the notebooks in this repo.  
-To run the examples directly, see **[README.md](./README.md)**.
+To run the examples directly, see **[README](./README.md)**.
 
 ---
 
@@ -16,10 +16,7 @@ To run the examples directly, see **[README.md](./README.md)**.
 ## Why Choose inait Forecasting?
 
 ### Effortless Accuracy
-- **5 Intelligent Models**: *basic*, *robust*, *neural*, *gradient_boost*, *fast_boost*  
-- **Automatic Model Selection** or manual choice  
-- **Ensemble Power** for accuracy and robustness  
-- **Prediction Intervals** (confidence bounds)
+- **Several Intelligent Models**: *inait-basic*, *inait-advanced* and *inait-best*  
 
 ### Business‑Ready Features
 - **REST API integration** in minutes  
@@ -28,14 +25,19 @@ To run the examples directly, see **[README.md](./README.md)**.
 
 ### Explainable AI
 - **Model transparency** and clear explanations  
-- **Feature importance** to see what drives forecasts  
-- **Interactive insights** to build trust
 
 ### Perfect for Your Industry
 **Retail & E‑commerce** – demand, price, and seasonal planning  
 **Finance & Trading** – markets, risk, and economic indicators  
 **Manufacturing & Supply Chain** – production, maintenance, and lead‑times  
 **Energy & Utilities** – load, renewables, and grid optimization
+
+#### Coming features
+- **Automatic Model Selection** or manual choice  
+- **Ensemble Power** for accuracy and robustness  
+- **Prediction Intervals** (confidence bounds)
+- **Interactive insights** to build trust
+- **Feature importance** to see what drives forecasts  
 
 ---
 
@@ -55,7 +57,7 @@ After deployment, locate the application’s **Base URL** in the resource detail
 
 ## Connect the examples
 
-Launch the examples via **Binder** or **Codespaces**, or run locally (see **[README.md](./README.md)**). Provide credentials using one of the methods below.
+Launch the examples via **Binder** or **Codespaces**, or run locally (see **[README](./README.md)**). Provide credentials using one of the methods below.
 
 **A) `credentials.txt`**  
 ```bash
@@ -78,15 +80,13 @@ Then open **`notebook-examples/0_quickstart.ipynb`**, run the validation cell, a
 
 ## Example results
 
-![Benchmark ETTh1](./assets/benchmark_etth1_inait.png)
+![Benchmark ETTh1](./assets/example-result.png)
 
 ---
 
 ## Data format requirements
-- UTF‑8 CSV with header row  
-- A **time index** column with consistent frequency (hourly, daily, …)  
-- A numeric **target** column to forecast  
-- Optional **exogenous** features aligned to the same timestamps
+- UTF‑8 CSV with header row, Excel files, parquet, others. 
+- Please, see function `read_file` in utils.  
 
 Example:
 ```csv
@@ -102,4 +102,4 @@ timestamp,DE_Spot_EPEX_1H_A,DE_Residual_Load_15M_A_AVG,DE_Consumption_15M_A_AVG
 - Issues: https://github.com/inait-external/inait-forecast-docs/issues  
 - Email: **contact@inait.ai**
 
-**Back to examples:** [README.md](./README.md)
+**Back to examples:** [README](./README.md)
