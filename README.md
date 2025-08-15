@@ -11,7 +11,8 @@ For Azure purchasing/deployment of the Managed App, see **[package-README.md](./
 # One‑click: run the notebooks
 
 ## MyBinder (no local install)
-Click the first **MyBinder badge** below. First launch per commit may take a few minutes while the image builds.
+Click the first **MyBinder badge** below to **run directly on your browser**.
+First launch per commit may take a few minutes while the image builds.
 
 ### Stable Version (Prod)
 
