@@ -74,7 +74,7 @@ def explain(
         target_column (str): The target column name for the explanation.
         cutoff_date (Optional[str]): The cutoff date for the explanation, i.e, the date up to which the historical data is considered.
         forecasted_step (Optional[int]): The forecasted step for the explanation, i.e., what step of the prediction to explain (starting from 0).
-        max_drivers_displayed (int): The maximum number of features to display in the explanation plot.
+        max_drivers_displayed (int): The maximum number of drivers to display in the explanation plot.
         base_url (Optional[str]): The base URL for the API. If not provided, will be auto-loaded from credentials.
         auth_key (Optional[str]): The authentication key for the API. If not provided, will be auto-loaded from credentials.
     """
@@ -119,18 +119,18 @@ def explain(
 
     explanation["feature"] = explanation["feature"].apply(rename_index)
 
-    excluded_features_sum = explanation["shap_value"].iloc[max_drivers_displayed:].sum()
-    number_of_excluded_features = max(explanation.shape[0] - max_drivers_displayed, 0)
-    explanation = explanation.head(max_drivers_displayed)  # Limit to the top N features
-    if number_of_excluded_features > 0:
+    excluded_drivers_sum = explanation["shap_value"].iloc[max_drivers_displayed:].sum()
+    number_of_excluded_drivers = max(explanation.shape[0] - max_drivers_displayed, 0)
+    explanation = explanation.head(max_drivers_displayed)  # Limit to the top N drivers
+    if number_of_excluded_drivers > 0:
         explanation = pd.concat(
             [
                 explanation,
                 pd.DataFrame(
                     [
                         [
-                            f"Sum of the {number_of_excluded_features} remaining features",
-                            excluded_features_sum,
+                            f"Sum of the {number_of_excluded_drivers} remaining drivers",
+                            excluded_drivers_sum,
                         ]
                     ],
                     columns=explanation.columns,
@@ -155,7 +155,7 @@ def explain(
         coloraxis_showscale=False,
         height=max(
             400, len(explanation) * 25
-        ),  # Adjust height based on number of features
+        ),  # Adjust height based on number of drivers
     )
 
     fig.show()
