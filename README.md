@@ -1,103 +1,104 @@
-[![run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
+[![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD?urlpath=lab/tree/notebook-examples/) [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/inait-external/inait-forecast-docs?quickstart=1)
 
-# 🛠️ Marketplace Examples
+# Inait Forecasting – Examples & Notebooks
 
-**inait** builds production-grade, enterprise-ready AI solutions that unlock the value of your data — fast.
+This README is **only** about running the examples (notebooks + helper utilities).  
+For Azure purchasing/deployment of the Managed App, see **[package-README.md](./package-README.md)**.
 
-This repository gives you hands-on, technical examples for deploying, integrating, and operationalizing inait’s flagship forecasting engine and other marketplace-ready AI tools. Every example is designed for rapid onboarding and real-world scalability, helping you move from proof-of-concept to business impact in days, not months.
-
-Our Azure Marketplace applications are trusted by leading organizations for:
-
-- Reliable, explainable AI forecasts for sales, demand, prices, and energy
-- Seamless deployment in your Azure tenant — with zero infrastructure headaches
-- API-first integrations, interactive notebooks, and transparent model selection
-- Secure, compliant, and built for scale
+> New to inait Forecasting? See **[Why Choose inait Forecasting](./package-README.md#why-choose-inait-forecasting)** for a quick overview of models, ensembles, explainability, and industry use cases.
 
 ---
 
-## 🔮 Inait Forecasting (Azure Marketplace)
-[![Deploy on Azure](https://img.shields.io/badge/Deploy_on-Azure-blue?logo=microsoft-azure)](https://portal.azure.com/#view/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/inaitsa1696941874379.inait_forecast-preview/)
+## One‑click: run the notebooks
 
-**Direct Azure deployment:**  
-If you have access, [deploy the Managed App now](https://portal.azure.com/#view/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/inaitsa1696941874379.inait_forecast-preview/).
+### Binder (no local install)
+Click the Binder badge above. It opens JupyterLab in `notebook-examples/`.  
+> First launch per commit may take a few minutes while the image builds.
 
-> _Don’t see the app or don’t have access?_  
-> [Contact us](mailto:contact@inait.ai) for a **private invitation** to the preview offer.
+### GitHub Codespaces
+Click the Codespaces badge. On first start, the dev container installs `uv`, runs `make init` to create `.venv`, and registers the **Python (inait‑uv)** kernel. Open `notebook-examples/` and start any notebook.
 
----
+### Local (uv)
+```bash
+# 1) Install uv (Linux/macOS)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-## 🌟 About the Basic Plan
+# 2) From the repo root, set up deps (creates .venv from pyproject.toml)
+make init   # or: uv sync
 
-![inait Forecast Basic Plan Screenshot](./assets/forecast-marketplace-screenshot.png)
-
-> The **Basic plan** provides essential access to core forecasting and prediction capabilities of Inait Forecast. Ideal for users exploring neuro-boosted AI analytics, this plan allows you to evaluate how effectively Inait technology can enhance your data-driven decisions with accurate and reliable predictions.
-
-Inait Forecast is an innovative AI solution designed to help businesses and analysts effortlessly perform data-driven forecasting and predictions. Utilizing state-of-the-art neuro-boosted AI models, it intelligently explores your datasets, delivering precise forecasts to drive strategic decisions.
-
----
-
-## 📦 Available Examples
-
-### 🔮 [Inait Forecasting Examples](./inait-predict-examples/)
-
-A robust, easy-to-use time series forecasting platform — now available for fast deployment from [Azure Marketplace](https://portal.azure.com/#view/Microsoft_Azure_Marketplace/GalleryItemDetailsBladeNopdl/id/inaitsa1696941874379.inait_forecast-preview/).
-
-- 🏆 5 intelligent models for any use case
-- 🚀 Ready-to-use notebooks and API examples
-- 📊 No ML expertise required
-- 🧑‍💻 [Jump to setup & demo ›](./inait-predict-examples/)
-
----
-
-## 🧭 Repo Structure
-
-| Folder                  | Purpose                                             |
-|-------------------------|-----------------------------------------------------|
-| `inait-predict-examples/` | Forecasting example suite and documentation         |
-| `client/`               | Integration code and API clients                   |
-| `data/`                 | Sample datasets                                    |
-| `notebook-examples/`    | Interactive Jupyter notebooks                      |
-| `Makefile`              | Project setup and development tools                |
-| `sample.env`            | Template for API credentials                       |
-
----
-
-## 🚀 Getting Started
-
-### Quick Setup
-
-1. **Install dependencies and set up the environment:**
-   ```bash
-   make init
-   ```
-
-2. **Configure API credentials:**
-   ```bash
-   cp sample.env .env
-   # Edit .env with your API_BASE_URL and API_AUTH_KEY
-   ```
-
-3. **Start exploring with Jupyter notebooks:**
-   ```bash
-   uv run jupyter lab
-   ```
-
-Each example contains its own README with specific setup and usage guidelines.
-Start with the [Inait Forecasting Examples](./inait-predict-examples/) for the fastest onboarding experience.
-
----
-
-## (Soon to come - **SaaS**) 🧭 Which Solution is Right for You?
-```mermaid
-flowchart TD
-&nbsp; &nbsp; A([START HERE])
-&nbsp; &nbsp; A --> B{Q1: How large is your typical dataset for a single job?}
-&nbsp; &nbsp; B -->|Massive: > 1 GB| C[SaaS SOLUTION<br>Why: Architected for multi-GB data;<br>avoids upload timeouts.]
-&nbsp; &nbsp; B -->|Standard: < 1 GB| D{Q2: How do you want to handle billing and procurement?}
-&nbsp; &nbsp; D -->|Single Bill on Azure Invoice| E[SaaS SOLUTION<br>Why: Simplifies procurement and billing through Azure.]
-&nbsp; &nbsp; D -->|One-shot cost + extra support by inait| F{Q3: What is your preference for infrastructure management?}
-&nbsp; &nbsp; F -->|Zero Maintenance| G[SaaS SOLUTION<br>Why: A fully managed service with no operational overhead.]
-&nbsp; &nbsp; F -->|Full Control in own Tenant| H[MANAGED APPLICATION<br>Why: For compliance, access control,<br>or specific policy reasons.]
+# 3) Launch JupyterLab
+uv run jupyter lab
 ```
 
-*Turn your data into real business results — with inait’s enterprise AI solutions.*
+---
+
+## Configure API access
+
+**A) `credentials.txt` (default used by notebooks)**  
+Create/edit a `credentials.txt` at the repo root:
+```bash
+API_BASE_URL='https://<your-forecast-endpoint>'
+API_AUTH_KEY='<your-api-key>'
+```
+
+**B) `.env` (supported via python‑dotenv)**  
+Create `.env` at the repo root:
+```ini
+API_BASE_URL="https://<your-forecast-endpoint>"
+API_AUTH_KEY="<your-api-key>"
+```
+
+> Don’t have an endpoint yet? See **[package-README.md](./package-README.md)** to deploy the Managed App and obtain credentials.
+
+---
+
+## Notebook catalog
+
+Run top‑to‑bottom:
+
+| Notebook | What it shows |
+|---|---|
+| `notebook-examples/0_quickstart.ipynb` | **Start here.** Configure credentials, submit your first forecast, and visualize results. |
+| `notebook-examples/1_advanced_model_evaluation.ipynb` | Advanced models and evaluation on ETTh1‑style data; compare approaches. |
+| `notebook-examples/2_energy_forecast_interpretability.ipynb` | **Explainability** for energy datasets: feature attributions and insights. |
+| `notebook-examples/3_sales_forecast_with_uncertainty.ipynb` | Sales forecasting with **prediction intervals** (uncertainty bands). |
+
+---
+
+## Sample data
+
+Small CSVs live in `data/`:
+
+- `data/airline.csv` – classic monthly airline passengers  
+- `data/etth1.csv` / `data/etth1_small.csv` – ETTh1‑like energy data (full & small)  
+- `data/M5_store_CA_1.csv` – single‑store sample in the M5 style  
+- `data/power_day_ahead.csv` – dayahead power demand/prices style
+
+**Expected format** (simplified):
+- A timestamp column with consistent frequency (hourly, daily, …)  
+- A numeric target column to forecast  
+- Optional exogenous feature columns aligned to the same timestamps
+
+---
+
+## Optional: Python helpers & CLI
+
+Lightweight utilities live under `inait/`:
+
+```bash
+# Show command help
+uv run python -m inait.prediction_script --help
+uv run python -m inait.plot_script --help
+uv run python -m inait.explanation_script --help
+```
+
+---
+
+## Troubleshooting
+
+- **Kernel mismatch (Codespaces)**: ensure the notebook kernel is **Python (inait‑uv)**.  
+- **Import errors in terminal**: `uv sync && source .venv/bin/activate`.  
+- **Auth errors (401/403)**: check `API_AUTH_KEY` and tenant for your endpoint.  
+- **Background jobs**: some examples poll until completion—keep the cell running.
+
+**Next:** Azure purchase & deployment → **[package-README.md](./package-README.md)**
