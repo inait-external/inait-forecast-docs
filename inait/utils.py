@@ -133,6 +133,9 @@ def read_file(filepath: str, file_type: Optional[str] = None, **kwargs) -> pd.Da
         # Load CSV file
         df = read_file("data.csv")
 
+        # Load CSV with index column (common pandas parameter)
+        df = read_file("data.csv", index_col=0)
+
         # Load Excel file with specific sheet
         df = read_file("data.xlsx", sheet_name="Sheet2")
 
