@@ -59,6 +59,7 @@ def explain(
     base_url: str,
     auth_key: str,
     historical_data: pd.DataFrame,
+    target_column: str,
     cutoff_date: Optional[str] = None,
     forecasted_step: Optional[int] = 0,
     max_drivers_displayed: int = 10,
@@ -102,6 +103,20 @@ def explain(
     explanation = explanation.sort_values(by="shap_value", ascending=False).reset_index(
         drop=True
     )
+
+    def rename_index(row):
+        if row.startswith("y[target]"):
+            return row.replace("y[target]", target_column)
+        elif row.startswith("X["):
+            # extract inside X[...] and append the rest
+            name = row.split("X[")[1].split("]")[0]
+            suffix = row.split("]")[1]
+            return name + suffix
+        else:
+            return row
+
+    explanation["feature"] = explanation["feature"].apply(rename_index)
+
     excluded_features_sum = explanation["shap_value"].iloc[max_drivers_displayed:].sum()
     number_of_excluded_features = max(explanation.shape[0] - max_drivers_displayed, 0)
     explanation = explanation.head(max_drivers_displayed)  # Limit to the top N features
@@ -133,8 +148,8 @@ def explain(
     )
 
     fig.update_layout(
-        xaxis_title="Impact of each feature on the prediction",
-        yaxis_title="Features",
+        xaxis_title="Impact of each driver on the prediction",
+        yaxis_title="Drivers",
         coloraxis_showscale=False,
         height=max(
             400, len(explanation) * 25
