@@ -1,15 +1,10 @@
-# Stable Version (Prod)
+## Stable Version (Prod)
 
-[![run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/prod_branch) 
+[![run Stable Version on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/prod_branch) 
 
-# Latest Version (Unstable)
+### Latest Version (Unstable)
 
-[![run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
-
-----
-# GitHub Codespaces
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/inait-external/inait-forecast-docs?quickstart=1)
+[![run HEAD on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
 
 ----
 
@@ -30,6 +25,9 @@ Click the Binder badge above. It opens JupyterLab in `notebook-examples/`.
 
 ### GitHub Codespaces
 Click the Codespaces badge. On first start, the dev container installs `uv`, runs `make init` to create `.venv`, and registers the **Python (inait‑uv)** kernel. Open `notebook-examples/` and start any notebook.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/inait-external/inait-forecast-docs?quickstart=1)
+
 
 ### Local (uv)
 ```bash
