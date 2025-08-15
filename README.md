@@ -1,4 +1,17 @@
-[![Run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD?urlpath=lab/tree/notebook-examples/) [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/inait-external/inait-forecast-docs?quickstart=1)
+# Stable Version (Prod)
+
+[![run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/prod_branch) 
+
+# Latest Version (Unstable)
+
+[![run on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
+
+----
+# GitHub Codespaces
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/inait-external/inait-forecast-docs?quickstart=1)
+
+----
 
 # Inait Forecasting – Examples & Notebooks
 
