@@ -109,7 +109,7 @@ def parse_common_arguments():
     return parser
 
 
-def load_file(filepath: str, file_type: Optional[str] = None, **kwargs) -> pd.DataFrame:
+def read_file(filepath: str, file_type: Optional[str] = None, **kwargs) -> pd.DataFrame:
     """
     Load a file as a pandas DataFrame based on its extension or specified type.
 
@@ -131,19 +131,19 @@ def load_file(filepath: str, file_type: Optional[str] = None, **kwargs) -> pd.Da
 
     Examples:
         # Load CSV file
-        df = load_file("data.csv")
+        df = read_file("data.csv")
 
         # Load Excel file with specific sheet
-        df = load_file("data.xlsx", sheet_name="Sheet2")
+        df = read_file("data.xlsx", sheet_name="Sheet2")
 
         # Load from HTTPS URL
-        df = load_file("https://example.com/data.csv")
+        df = read_file("https://example.com/data.csv")
 
         # Force .dat file to be read as CSV
-        df = load_file("custom.dat", file_type="csv")
+        df = read_file("custom.dat", file_type="csv")
 
         # Force specific reader with additional parameters
-        df = load_file("data.txt", file_type="csv", delimiter="\t")
+        df = read_file("data.txt", file_type="csv", delimiter="\t")
     """
     # Map file types to pandas reader functions
     type_readers = {
