@@ -30,15 +30,16 @@ API_BASE_URL='https://<your-forecast-endpoint>'
 API_AUTH_KEY='<your-api-key>'
 ```
 
-**Note:** If it's the first time you run Jupyter notebooks, you can click on **"Run"** at the top menu and select **"Run All Cells"**.
-
 ## Video tutorials (get clarity about 2 min)
 
 * [Notebooks: Set Credentials and Run](https://vimeo.com/1110294635/fb1f373c02) ( < 80 sec )
 * [Notebooks: Add new data and tailor the code](https://vimeo.com/1110308096/6b93267578) ( < 60 sec )
 
-![Benchmark ETTh1](./assets/vimeo-shots.png)
+![videos](./assets/vimeo-shots.png)
 
+**Notes:**
+* If it's the first time you run Jupyter notebooks, start by clicking on **"Run"** at the top menu and select **"Run All Cells"**.
+* If you get a `timeout error`, please just restart the Kernel and give it another try.
 
 ----
 
