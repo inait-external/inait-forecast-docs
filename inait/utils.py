@@ -55,9 +55,10 @@ def auto_load_credentials() -> tuple[str, str]:
         if os.path.exists(path):
             try:
                 load_dotenv(path)
-                base_url = os.environ.get("API_BASE_URL")
-                auth_key = os.environ.get("API_AUTH_KEY")
-                if base_url and auth_key and base_url.strip() and auth_key.strip():
+                base_url = os.environ.get("API_BASE_URL", "").strip()
+                auth_key = os.environ.get("API_AUTH_KEY", "").strip()
+
+                if base_url and auth_key:
                     return base_url, auth_key
             except Exception:
                 continue
