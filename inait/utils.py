@@ -123,7 +123,7 @@ def read_file(filepath: str, file_type: Optional[str] = None, **kwargs) -> pd.Da
         **kwargs: Additional arguments passed to the pandas reader function.
 
     Returns:
-        pd.DataFrame: Loaded dataframe.
+        pd.DataFrame: Loaded dataframe with columns sorted alphabetically.
 
     Raises:
         ValueError: If file type or extension is not supported.
@@ -170,7 +170,10 @@ def read_file(filepath: str, file_type: Optional[str] = None, **kwargs) -> pd.Da
             )
         reader = type_readers[file_type_lower]
         try:
-            return reader(filepath, **kwargs)
+            data = reader(filepath, **kwargs)
+            # Sort columns alphabetically
+            data = data[sorted(data.columns)]
+            return data
         except Exception as e:
             raise Exception(f"Failed to load file as {file_type}: {e}") from e
 
@@ -206,6 +209,9 @@ def read_file(filepath: str, file_type: Optional[str] = None, **kwargs) -> pd.Da
     reader = readers[extension]
 
     try:
-        return reader(filepath, **kwargs)
+        data = reader(filepath, **kwargs)
+        # Sort columns alphabetically
+        data = data[sorted(data.columns)]
+        return data
     except Exception as e:
         raise Exception(f"Failed to load {extension} file: {e}") from e
