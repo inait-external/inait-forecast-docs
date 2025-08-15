@@ -16,8 +16,7 @@ First launch per commit may take a few minutes while the image builds.
 
 ### Stable Version (Prod)
 
-[![run Stable Version on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/prod_branch) 
-
+[![run Stable Version on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/prod)
 #### Latest Version (Unstable)
 
 [![run HEAD on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/inait-external/inait-forecast-docs/HEAD)
