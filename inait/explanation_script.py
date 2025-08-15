@@ -1,6 +1,6 @@
 import argparse
 from typing import Optional
-from .utils import make_request, parse_common_arguments
+from .utils import make_request, parse_common_arguments, with_credentials
 import pandas as pd
 import plotly.express as px
 
@@ -54,27 +54,29 @@ def parse_arguments():
     return parser.parse_args()
 
 
+@with_credentials
 def explain(
     session_id: str,
-    base_url: str,
-    auth_key: str,
     historical_data: pd.DataFrame,
     target_column: str,
     cutoff_date: Optional[str] = None,
     forecasted_step: Optional[int] = 0,
     max_drivers_displayed: int = 10,
+    base_url: Optional[str] = None,
+    auth_key: Optional[str] = None,
 ):
     """
     Generate and display a feature importance explanation for the model predictions.
 
     Args:
         session_id (str): The session ID for the explanation request.
-        base_url (str): The base URL for the API.
-        auth_key (str): The authentication key for the API.
         historical_data (pd.DataFrame): The historical data used for the explanation.
+        target_column (str): The target column name for the explanation.
         cutoff_date (Optional[str]): The cutoff date for the explanation, i.e, the date up to which the historical data is considered.
         forecasted_step (Optional[int]): The forecasted step for the explanation, i.e., what step of the prediction to explain (starting from 0).
-        max_features_displayed (int): The maximum number of features to display in the explanation plot.
+        max_drivers_displayed (int): The maximum number of features to display in the explanation plot.
+        base_url (Optional[str]): The base URL for the API. If not provided, will be auto-loaded from credentials.
+        auth_key (Optional[str]): The authentication key for the API. If not provided, will be auto-loaded from credentials.
     """
 
     cutoff_date = (
