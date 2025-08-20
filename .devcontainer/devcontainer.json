@@ -8,7 +8,8 @@
       "settings": {
         "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
         "python.terminal.activateEnvironment": true,
-        "jupyter.notebookFileRoot": "${workspaceFolder}"
+        "jupyter.notebookFileRoot": "${fileDirname}",             // <-- was ${workspaceFolder}
+        "jupyter.interactiveWindow.notebookFileRoot": "${fileDirname}" // (optional, for Interactive Window)
       },
       "extensions": ["ms-python.python", "ms-toolsai.jupyter"]
     }

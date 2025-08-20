@@ -7,6 +7,23 @@ This README is **only** about running the examples (notebooks + helper utilities
 
 ---
 
+<details>
+<summary><strong>Table of Contents</strong></summary>
+
+- [One‑click: Run the Notebooks](#oneclick-run-the-notebooks)
+  - [Binder (no local install)](#binder-no-local-install)
+  - [GitHub Codespaces](#github-codespaces)
+  - [Local (uv)](#local-uv)
+- [Configure API access](#configure-api-access-1)
+- [Notebook catalog](#notebook-catalog)
+- [Sample data](#sample-data)
+- [Optional: Python helpers & CLI](#optional-python-helpers--cli)
+- [Troubleshooting](#troubleshooting)
+
+</details>
+
+---
+
 # One‑click: Run the Notebooks
 
 ## Binder (no local install)
