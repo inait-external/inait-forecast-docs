@@ -47,8 +47,8 @@ def auto_load_credentials() -> tuple[str, str]:
     # Try loading from standard locations
     credential_paths = [
         "../credentials.txt",  # Parent directory (common for notebooks)
-        "./credentials.txt",  # Current directory
-        "credentials.txt",  # Current directory without ./
+        "./credentials.txt",   # Current directory
+        "credentials.txt",     # Current directory without ./
     ]
 
     for path in credential_paths:
@@ -106,6 +106,20 @@ def with_credentials(func):
     return wrapper
 
 
+def _build_auth_headers(auth_key: Optional[str]) -> dict:
+    """
+    If an auth_key is provided, include BOTH common auth headers so the server
+    can accept whichever it supports (Bearer or Azure APIM subscription key).
+    """
+    if not auth_key:
+        return {}
+
+    return {
+        "Authorization": f"Bearer {auth_key}",
+        "Ocp-Apim-Subscription-Key": auth_key,
+    }
+
+
 def make_request(url: str, payload: dict, auth_key: Optional[str] = None):
     """
     Makes a POST request to the specified endpoint with optional authentication.
@@ -122,8 +136,7 @@ def make_request(url: str, payload: dict, auth_key: Optional[str] = None):
         Exception: If the request fails or returns a non-200 status code.
     """
     headers = {"Content-Type": "application/json"}
-    if auth_key:
-        headers["Authorization"] = f"Bearer {auth_key}"
+    headers.update(_build_auth_headers(auth_key))
 
     response = requests.post(url, json=payload, headers=headers)
 
@@ -134,8 +147,7 @@ def make_request(url: str, payload: dict, auth_key: Optional[str] = None):
             f"Request failed: {response.status_code}, {response.text}"
         ) from e
 
-    response = response.json()
-    return response
+    return response.json()
 
 
 def make_get_request(
@@ -152,21 +164,17 @@ def make_get_request(
     Returns:
         dict: Task status or result if completed.
     """
-    bearer_str = f"Bearer {auth_key}" if auth_key else ""
-    headers = {"Authorization": bearer_str} if auth_key else {}
+    headers = _build_auth_headers(auth_key)
 
     # Check status
-    if session_id is not None:
-        url = f"{url}{session_id}"
-        status_response = requests.get(f"{url}", headers=headers)
-    else:
-        status_response = requests.get(url, headers=headers)
+    full_url = f"{url}{session_id}" if session_id is not None else url
+    status_response = requests.get(full_url, headers=headers)
 
     try:
         status_response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         raise Exception(
-            f"Status check failed for url {url}: {status_response.status_code}, {status_response.text}"
+            f"Status check failed for url {full_url}: {status_response.status_code}, {status_response.text}"
         ) from e
     return status_response.json()
 
