@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ruff:
+    name: Ruff Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Ruff Linting
+        uses: astral-sh/ruff-action@v1
+        with:
+          args: "check"
+      
+      - name: Ruff Format Check
+        uses: astral-sh/ruff-action@v1
+        with:
+          args: "format --check"
+
+  notebook-outputs:
+    name: Check Notebook Outputs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+      
+      - name: Install dependencies
+        run: uv sync
+      
+      - name: Check for notebook outputs
+        run: |
+          echo "Checking for notebooks with outputs..."
+          notebooks_with_outputs=""
+          for notebook in $(find . -name '*.ipynb' -not -path '*.venv/*'); do
+            if ! uv run jupyter nbconvert --clear-output --stdout "$notebook" | diff -q "$notebook" - > /dev/null 2>&1; then
+              echo "❌ $notebook has outputs"
+              notebooks_with_outputs="${notebooks_with_outputs}${notebook}\n"
+            fi
+          done
+          
+          if [ -n "$notebooks_with_outputs" ]; then
+            echo ""
+            echo "Error: The following notebooks have outputs that should be cleared:"
+            echo -e "$notebooks_with_outputs"
+            echo ""
+            echo "Please run 'make fmt' locally to clear notebook outputs before committing."
+            exit 1
+          else
+            echo "✅ All notebooks have cleared outputs"
+          fi
