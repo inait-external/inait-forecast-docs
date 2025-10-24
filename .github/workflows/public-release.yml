@@ -1,0 +1,92 @@
+name: 'Update Public Release Branch (SAFE)'
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Public branch to (re)create (NOT main)'
+        required: true
+        default: 'public'
+      confirm:
+        description: 'Type the exact branch name again to confirm'
+        required: true
+
+concurrency:
+  group: public-release
+  cancel-in-progress: true
+
+jobs:
+  create-public-branch:
+    # Hard gate: refuse to run if branch is protected or confirmation mismatches
+    if: |
+      github.event.inputs.target_branch != '' &&
+      github.event.inputs.target_branch == github.event.inputs.confirm &&
+      !contains(fromJSON('["main","develop","dev","release","staging"]'), github.event.inputs.target_branch)
+    runs-on: ubuntu-latest
+
+    # Only this job can write; you can split jobs if you want finer scoping.
+    permissions:
+      contents: write
+
+    env:
+      TARGET_BRANCH: ${{ github.event.inputs.target_branch }}
+
+    steps:
+      - name: '0. Safety: refuse protected targets'
+        run: |
+          set -Eeuo pipefail
+          PROTECTED_REGEX='^(main|develop|dev|release|staging)$'
+          if [[ "${TARGET_BRANCH}" =~ ${PROTECTED_REGEX} ]]; then
+            echo "::error::Refusing to push to protected branch: ${TARGET_BRANCH}"
+            exit 1
+          fi
+
+      - name: '1. Check out the latest code from main'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0    # enables lease checks and remote comparisons
+
+      - name: '2. Configure Git user'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: '3. Pre-fetch remote target (for --force-with-lease safety)'
+        run: |
+          git fetch origin "${TARGET_BRANCH}" || true
+
+      - name: '4. Create the sanitized credentials.txt template'
+        run: |
+          cat > credentials.txt <<'EOF'
+          API_BASE_URL=''
+          API_AUTH_KEY=''
+          EOF
+          echo "Successfully created sanitized credentials.txt template."
+
+      - name: '5. Create an orphan branch from the working tree'
+        run: |
+          set -Eeuo pipefail
+          # Clean up any stale local branch with the same name
+          if git rev-parse --verify "${TARGET_BRANCH}" >/dev/null 2>&1; then
+            git branch -D "${TARGET_BRANCH}"
+          fi
+          git checkout --orphan "${TARGET_BRANCH}"
+          # Stage files for the brand-new root commit
+          git add -A
+          git add -f credentials.txt
+          git commit -m "public release ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+
+      - name: '6. Push public branch with lease (no blind overwrites)'
+        run: |
+          set -Eeuo pipefail
+          # If the remote exists, push with an explicit lease expectation; else, normal lease
+          REMOTE_SHA="$(git rev-parse --verify --quiet "origin/${TARGET_BRANCH}" || echo '')"
+          if [[ -n "${REMOTE_SHA}" ]]; then
+            git push --force-with-lease=refs/heads/${TARGET_BRANCH}:${REMOTE_SHA} origin HEAD:refs/heads/${TARGET_BRANCH}
+          else
+            git push --force-with-lease origin HEAD:refs/heads/${TARGET_BRANCH}
+          fi
+
+      - name: '7. Done'
+        run: echo "Successfully created and pushed '${TARGET_BRANCH}'."
