@@ -1,0 +1,14 @@
+HELP_MSG='Some checks failed. Please run `make fmt` to fix formatting issues.'
+
+make fmt
+
+if ! git diff --quiet; then
+    echo "Error: You have unstaged changes in tracked files."
+    echo "Please stash or commit them before proceeding."
+    echo ""
+    echo "Unstaged changes in:"
+    git diff --name-only
+    echo ""
+    echo "Use 'git stash' to temporarily save changes, or 'git add' to include them."
+    exit 1
+fi

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euxo pipefail
+
+# Build phase runs once per image (great for installing tools + deps).
+# Binder runs as a non-root user; install uv to ~/.local/bin.
+export PATH="$HOME/.local/bin:$PATH"
+
+# Install Python 3.12 FIRST
+conda install -y python=3.12
+
+# Install uv (official installer)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install the environment from your project files
+uv pip install --system -e .
+
+# Enable the execution time extension
+jupyter labextension enable @jupyterlab/notebook-extension:tracker
