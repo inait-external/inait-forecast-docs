@@ -1,9 +1,13 @@
 # Never commit hidden files
 .*
 !.github/
+!.binder/
+!.binder/**
 
 # Python
 __pycache__/
+futurecomplete-examples/__pycache__/
+notebook-examples/__pycache__/
 *.py[cod]
 *$py.class
 *.so
