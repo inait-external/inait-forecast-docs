@@ -2,6 +2,7 @@
 # it will generate a list of all targets in this Makefile
 .DEFAULT_GOAL := help
 .PHONY: help, fmt, test, test_all, gui
+
 help:			## Show this help.
 	@echo "Usage: make [target]"
 	@echo ""
@@ -17,7 +18,7 @@ init:
 		echo "see: https://docs.astral.sh/uv/getting-started/installation/"; \
 		exit 1; \
 	fi
-	
+
 	uv sync
 
 	cp scripts/pre-commit .git/hooks/pre-commit
@@ -26,9 +27,8 @@ init:
 	@echo "🎉 Environment setup complete!"
 	@echo ""
 	@echo "📋 Next steps:"
-	@echo "1. Copy sample.env to .env and add your API credentials:"
-	@echo "   cp sample.env .env"
-	@echo "   # Then edit .env with your API_BASE_URL and API_AUTH_KEY"
+	@echo "1. Create a .env file and add your API credentials:"
+	@echo "   # Add API_BASE_URL and API_AUTH_KEY to .env"
 	@echo ""
 	@echo "2. To activate the environment and start Jupyter:"
 	@echo "   uv run jupyter lab"
@@ -38,7 +38,6 @@ init:
 	@echo ""
 	@echo "   Or to activate the shell environment:"
 	@echo "   source .venv/bin/activate"
-
 
 fmt:			## Auto-format code.
 	uv run ruff check --fix .
