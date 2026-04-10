@@ -1,0 +1,8 @@
+.git/hooks/pre-commit
+
+# we don't have test for this repo yet
+
+# uv run pytest --numprocesses=auto --dist=worksteal tests/ || {
+#     echo 'Some tests failed. Please fix them before pushing.'
+#     exit 1
+# }
