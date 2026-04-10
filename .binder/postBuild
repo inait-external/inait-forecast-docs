@@ -6,8 +6,8 @@ export PATH="$HOME/.local/bin:$PATH"
 # Install uv for dependency resolution
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install the project from the repo root
-uv pip install --system -e .
+# Install dependencies from pyproject.toml
+uv pip install --system -r pyproject.toml
 
 # Optional Jupyter tweak
 jupyter labextension enable @jupyterlab/notebook-extension:tracker || true
